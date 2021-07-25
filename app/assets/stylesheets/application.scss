@@ -14,3 +14,9 @@
  *= require_self
  */
  @import "bootstrap";
+
+// バリデーションエラーのあったフォームのレイアウトが崩れるのを防止する
+// display:contents...指定した要素がブロックを持たなくなる
+ .field_with_errors{
+   display: contents;
+ }

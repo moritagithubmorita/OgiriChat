@@ -1,0 +1,55 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-lg-10">
+      <h1>お題詳細</h1>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-10">
+      <table class="table table-borderless">
+        <tr>
+          <th>お題</th>
+          <td><p><%= @question_room.body %></p></td>
+        </tr>
+        <tr>
+          <th>作成者</th>
+          <td><%= current_admin.name %></td>
+        </tr>
+        <tr>
+          <th>作成日/更新日</th>
+          <td><p><%= l @question_room.created_at %> / <%= l @question_room.updated_at %></p></td>
+        </tr>
+        <tr>
+          <th>お題ステータス</th>
+          <td>
+            <% if @question_room.is_active %>
+              <label>有効</label>
+            <% else %>
+              <label>無効</label>
+            <% end %>
+          </td>
+        </tr>
+        <tr>
+          <th>出題ステータス</th>
+          <td>
+            <% if @question_room.is_set %>
+              <label>出題済み</label>
+            <% else %>
+              <label>未出題</label>
+            <% end %>
+          </td>
+        </tr>
+        <% if @question_room.is_set %>
+          <% count = 1 %>
+          <% panelists = Panelist.where(question_room_id: @question_room.id) %>
+          <% panelists.each do |panelist| %>
+            <tr>
+              <th>参加者<%= count++ %></th>
+              <td><%= User.find(panelist.user_id).name %></td>
+            </tr>
+          <% end %>
+        <% end %>
+      </table>
+    </div>
+  </div>
+</div>

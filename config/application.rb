@@ -17,3 +17,13 @@ module OgiriChat
     # the framework and any gems in your application.
   end
 end
+
+module TimeFormatSandbox
+  class Application < Rails::Application
+    # タイムゾーンを東京に変更
+    config.time_zone = 'Asia/Tokyo'
+    # デフォルトのロケール(各地域毎の設定群)を日本に設定
+    config.i18n.default_locale = :ja
+
+  end
+end

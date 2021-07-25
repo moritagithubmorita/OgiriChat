@@ -1,0 +1,36 @@
+<div class="container-fluid">
+  <div class="row justify-content-center">
+    <div class="col-lg-10 d-flex justify-content-center">
+      <h1><%= @user.name %>さんの個人情報</h1>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-10 mx-auto d-flex justify-content-center">
+      <table class="table table-borderless">
+        <tr>
+          <th>名前</th>
+          <td><%= @user.name %></td>
+        </tr>
+        <tr>
+          <th>email</th>
+          <td><%= @user.email %></td>
+        </tr>
+        <tr>
+          <th>平均ナイス獲得数</th>
+          <% average = @user.total_nice_count@ / @user.total_answer_count %>
+          <td><label><%= "#{average}" %>個</label></td>
+        </tr>
+        <tr>
+          <th>獲得ナイス総数</th>
+          <td><label><%= @user.total_nice_count %>個</label></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-10">
+      <%= link_to '編集する', edit_users_path %>
+      <%= link_to '退会する', confirm_path %>
+    </div>
+  </div>
+</div>

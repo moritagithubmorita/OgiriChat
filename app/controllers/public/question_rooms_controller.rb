@@ -16,8 +16,6 @@ class Public::QuestionRoomsController < ApplicationController
     end
     #Panelistレコードを生成、dbに保存
     Panelist.create(question_room_id: @question_room.id, user_id: current_user.id)
-    #QuestionRoomに紐づくPanelistを全取得(1個以上のはず)。先頭に近いほど古い。
-    @panelists = @question_room.panelists
   end
   
   def battle

@@ -4,9 +4,11 @@ Rails.application.routes.draw do
     :registrations => 'public/registrations'
   }
 
-  resources :notices, only: :index
-  resources :inquries, only: [:new, :create]
-  resources :users, only: [:show, :edit, :update]
+  scope module: :public do
+    resources :notices, only: :index
+    resources :inquries, only: [:new, :create]
+    resource :users, only: [:show, :edit, :update]
+  end
 
   root to: "public/homes#top"
   get "homes/stand_by" => 'public/homes#stand_by', as: 'stand_by'
@@ -16,8 +18,8 @@ Rails.application.routes.draw do
   get "question_rooms/finish" => 'public/question_rooms#finish', as: 'finish'
   get "question_rooms/result" => 'public/question_rooms#result', as: 'result'
 
-  get "users/confirm" => 'public/users/confirm', as: 'confirm'
-  patch "users/withdraw" => 'public/users/withdraw', as: 'withdraw'
+  get "users/confirm" => 'public/users#confirm', as: 'confirm'
+  patch "users/withdraw" => 'public/users#withdraw', as: 'withdraw'
 
   devise_for :admin, :controllers =>{
     :sessions => 'admin/sessions'
