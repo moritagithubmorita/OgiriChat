@@ -1,0 +1,11 @@
+<div class="match-make-user match-make__user">
+  <% user = User.find(panelist.user_id) %>
+  <div class="match-make-user__image"></div>
+  <p class="match-make-user__name">
+    <%= user.name %>
+  </p>
+  <p class="match-make-user__average">
+    <% average = user.total_nice_count/user.total_answer_count %>
+    平均ナイス獲得数 : <%= averate %>個/答
+  </p>
+</div>

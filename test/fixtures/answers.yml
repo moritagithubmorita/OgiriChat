@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  question_room_id: 1
+  user_id: 1
+  total_nice_count: 1
+
+two:
+  question_room_id: 1
+  user_id: 1
+  total_nice_count: 1

@@ -1,0 +1,21 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  body: MyString
+  added_by: 1
+  game_time: 1
+  total_answer_count: 1
+  total_nice_count: 1
+  is_active: false
+  is_set: false
+  is_running: false
+
+two:
+  body: MyString
+  added_by: 1
+  game_time: 1
+  total_answer_count: 1
+  total_nice_count: 1
+  is_active: false
+  is_set: false
+  is_running: false

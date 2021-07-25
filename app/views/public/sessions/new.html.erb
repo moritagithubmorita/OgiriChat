@@ -1,0 +1,39 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-lg-6">
+      <div class="view-title">
+        <h1 class='view-title__text'>ログイン!</h1>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-10">
+      <%= render partial: 'templates/error', locals: {model, @user} %>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-10 d-flex justify-content-center">
+      <%= form_with model: @user, url: user_session_path, local: true do |f| %>
+        <div class="row form-group">
+          <label class="col-lg-3">email</label>
+          <%= f.email_field :email, class:"col-lg-9", placeholder: "ogiri@ogiri.com" %>
+        </div>
+        <div class="form-group row">
+          <label class="col-lg-3">パスワード</label>
+          <%= f.password_field :password, class:"col-lg-4", placeholder: "パスワード" %>
+        </div>
+        <div class="row form-group justify-content-center">
+          <%= f.submit 'ログインする！', class:"col-lg-3" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-5 d-flex justify-content-center">
+      <p>※新規登録は<%= link_to 'コチラ', new_user_registration_path %></p>
+    </div>
+  </div>
+</div>
+
+
+

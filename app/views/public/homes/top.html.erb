@@ -1,0 +1,20 @@
+<div class="container">
+  <div class="row">
+    <div class="col-lg-10 mx-auto d-flex justify-content-center">
+      <%= link_to match_make_path, class:"match-make-link" do %>
+        <div class="match-make-link__image">
+          <h1 class="match-make-link__text">マッチメイク!</h1>
+        </div>
+      <% end %>
+    </div>
+  </div>
+  <div class="row">
+    <div class=" col-lg-10 mx-auto d-flex justify-content-center">
+      <%= link_to battle_path(is_watcher: true) do %>
+        <div class="watcher-link">
+          <h1 class="watcher-link__text">観覧する</h1>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
