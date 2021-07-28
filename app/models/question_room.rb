@@ -1,7 +1,7 @@
 class QuestionRoom < ApplicationRecord
   DEFAULT_GAME_TIME = 120 #デフォルトの対決時間[秒]
 
-  belongs_to :admin
+  belongs_to :admin, foreign_key: :added_by
   has_many :panelists
   has_many :answers
   has_many :notices
@@ -16,7 +16,7 @@ class QuestionRoom < ApplicationRecord
   attribute :room_status, :integer, default: :standby
 
   validates :body, :added_by, presence: true
-  
+
   # 待機状態にさせる
   def get_ready
     # 自身の処理

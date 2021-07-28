@@ -1,0 +1,35 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-lg-10">
+      <h1>対戦結果詳細</h1>
+    </div>
+  </div>
+  <% @question_rooms.each do |question_room| %>
+    <div class="row">
+      <div class="col-lg-10">
+        <h2>お題</h2>
+        <div>
+          <%= question_room.body %>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-10">
+        <% question_room.answers.each do |answer| %>
+          <div class="row">
+            <p class="col-lg-10"><%= answer.body %></p>
+            <div class="col-lg-2">
+              <%= image_tag 'heart.png' %>
+              <%= answer.total_nice_count %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+  <div class="row">
+    <div class="col">
+      <label>トップへ</label>
+    </div>
+  </div>
+</div>

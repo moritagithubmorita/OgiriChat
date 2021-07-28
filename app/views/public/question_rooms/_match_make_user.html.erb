@@ -1,11 +1,16 @@
 <div class="match-make-user match-make__user">
-  <% user = User.find(user_id) %>
-  <div class="match-make-user__image"></div>
-  <p class="match-make-user__name">
-    <%= user.name %>
+  <%= image_tag 'user.png', class="match-make-user__image" %>
+  <p class="match-make-user__rank">
+    <%= user.rank_i18n %>
   </p>
+  <div class="match-make-user__name">
+    <%= render partial: 'templates/user_name', locals: {user: user} %>
+  </div>
   <p class="match-make-user__average">
-    <% average = user.total_nice_count/user.total_answer_count %>
-    平均ナイス獲得数 : <%= averate %>個/答
+    <% average = 0 %>
+    <% if user.total_answer_count>0 %>
+      <% average = user.total_nice_count/user.total_answer_count %>
+    <% end %>
+    平均ナイス獲得数 : <%= average %>個/答
   </p>
 </div>

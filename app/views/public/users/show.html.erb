@@ -1,7 +1,10 @@
 <div class="container-fluid">
   <div class="row justify-content-center">
     <div class="col-lg-10 d-flex justify-content-center">
-      <h1><%= @user.name %>さんの個人情報</h1>
+      <h1>
+        <%= render partial: 'templates/user_name', locals: {user: user} %>
+        さんの個人情報
+      </h1>
     </div>
   </div>
   <div class="row">
@@ -14,6 +17,10 @@
         <tr>
           <th>email</th>
           <td><%= @user.email %></td>
+        </tr>
+        <tr>
+          <th>ランク</th>
+          <td><%= @user.rank_i18n %></td>
         </tr>
         <tr>
           <th>平均ナイス獲得数</th>

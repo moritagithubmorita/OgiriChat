@@ -4,5 +4,5 @@ class Answer < ApplicationRecord
 
   attribute :total_nice_count, :integer, default: 0
 
-  validates :question_room_id, :user_id, presence: true
+  validates :question_room_id, :user_id, :body, presence: true
 end

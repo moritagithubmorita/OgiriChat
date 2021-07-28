@@ -2,3 +2,17 @@ ja:
   time:
     formats:
       default: "%Y/%m/%d %H:%M:%S"
+  enum:
+    question_room:
+      room_status:
+        standby: "待機中"
+        matching: "マッチング中"
+        running: "対戦中"
+        finished: "終了"
+    user:
+      rank:
+        fledgling: "駆け出し"
+        seeker: "探求者"
+        skilful: "腕利き"
+        veteran: "ベテラン"
+        master: "マスター"

@@ -10,6 +10,78 @@
   </head>
 
   <body>
+    <header>
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class= "navbar navbar-expand-lg navbar-info">
+              <h1 class="navbar-brand">OgiriChat</h1>
+              <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#nav-target" aria-controls="nav-target" aria-expanded="false" aria-label="Toggle Navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="collapse navbar-collapse" id="nav-target">
+                <ul class="navbar-nav">
+                  <!--未ログイン時-->
+                  <% if !user_signed_in? && !admin_signed_in? %>
+                    <li class="nav-item">
+                      <%= link_to '新規登録', new_user_registration_path, class:"nav-link" %>
+                    </li>
+                    <li class="nav-item">
+                      <%= link_to 'ログイン', new_user_session_path, class:"nav-link" %>
+                    </li>
+
+                  <!--ユーザのみログイン時-->
+                  <% elsif user_signed_in? && !admin_signed_in? %>
+                    <li class="nav-item">
+                      <%= link_to 'マイページ', users_path, class:"nav-link" %>
+                    </li>
+                    <li class="nav-item">
+                      <%= link_to '通知', notices_path, class:"nav-link" %>
+                    </li>
+                    <li class="nav-item">
+                      <%= link_to '問い合わせ', new_inqury_path, class:"nav-link" %>
+                    </li>
+                    <li class="nav-item">
+                      <%= link_to 'ログアウト', destroy_user_session_path, method: :delete, class:"nav-link" %>
+                    </li>
+
+                  <!--管理者ログイン時-->
+                  <% else %>
+                    <li class="nav-item">
+                      <%= form_tag(admin_homes_search_path, method: :get) do %>
+                        <%= text_field_tag :search %>
+                        <%= submit_tag '検索', name: :nil %>
+                      <% end %>
+                    </li>
+                    <li class="nav-item">
+                      <%= link_to 'お題ルーム一覧', admin_question_rooms_path, class:"nav-link" %>
+                    </li>
+                    <li class="nav-item">
+                      <%= link_to 'ユーザー一覧', admin_users_path, class:"nav-link" %>
+                    </li>
+                    <li class="nav-item">
+                      <%= link_to '問い合わせ一覧', admin_inquiries_path, class:"nav-link" %>
+                    </li>
+                    <li class="nav-item">
+                      <%= link_to 'ログアウト', destroy_admin_session_path, method: :delete, class:"nav-link" %>
+                    </li>
+                  <% end %>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
     <%= yield %>
+    <footer>
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-lg-12">
+
+          </div>
+        </div>
+      </div>
+    </footer>
   </body>
 </html>

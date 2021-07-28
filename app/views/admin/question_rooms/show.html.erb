@@ -44,9 +44,10 @@
           <% panelists = Panelist.where(question_room_id: @question_room.id) %>
           <% panelists.each do |panelist| %>
             <tr>
-              <th>参加者<%= count++ %></th>
-              <td><%= User.find(panelist.user_id).name %></td>
+              <th><label>参加者<%= "#{count}" %></label></th>
+              <td><%= render partial: 'templates/user_name', locals: {user: User.find(panelist.user_id)} %></td>
             </tr>
+            <% count += 1 %>
           <% end %>
         <% end %>
       </table>

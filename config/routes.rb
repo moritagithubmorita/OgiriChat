@@ -13,7 +13,7 @@ Rails.application.routes.draw do
   root to: "public/homes#top"
   get "homes/stand_by" => 'public/homes#stand_by', as: 'stand_by'
 
-  get "question_rooms/match_make" => 'public/questions#match_make', as: 'match_make'
+  get "question_rooms/match_make" => 'public/question_rooms#match_make', as: 'match_make'
   get "question_rooms/battle" => 'public/question_rooms#battle', as: 'battle'
   get "question_rooms/finish" => 'public/question_rooms#finish', as: 'finish'
   get "question_rooms/result" => 'public/question_rooms#result', as: 'result'
@@ -27,11 +27,13 @@ Rails.application.routes.draw do
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 
   namespace :admin do
-    get 'admin/homes/top' => 'homes#top'
-    get 'admin/homes/search' => 'homes#search'
+    get '/homes/top' => 'homes#top'
+    get '/homes/search' => 'homes#search'
     resources :users, only: [:edit, :update, :index, :show]
     resources :question_rooms
     resources :inquiries, only: [:update, :index, :show]
   end
+
+  mount ActionCable.server => '/cable'
 
 end
