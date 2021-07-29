@@ -1,22 +1,34 @@
 /*global $*/
 $(document).on('turbolinks:load', function() {
-  console.log("create")
-  var room_id = $('#match-make').data('question-room-id');
-  console.log(room_id)
-  var roomChannel = App.cable.subscriptions.create({ channel: 'RoomChannel', question_room_id: room_id },{
-    connected: function() {
-      console.log("connected")
-    },
+  var qr_ids = $('#match-make').data('question-room-ids');
 
-    disconneted: function() {
-      console.log("disconnected")
-    },
+  var roomChannels = {}
+  
+  console.log(App.cable);
 
-    received: function(data){
-      console.log("received")
-      return $('#match-make').append(data['message']);
-    }
+  var count = 1
+  $.each(qr_ids, function(key, value){
+    console.log(value)
 
-  });
+    var key_name = "roomChannel"+count
+     roomChannels[key_name] = App.cable.subscriptions.create({ channel: 'RoomChannel', question_room_id: value },{
+      connected: function() {
+        console.log("connected")
+      },
+
+      disconneted: function() {
+        console.log("disconnected")
+      },
+
+      received: function(data){
+        console.log("received")
+        return $('#match-make').append(data['message']);
+      }
+    });
+
+    count +=1
+
+  })
+
 
 });

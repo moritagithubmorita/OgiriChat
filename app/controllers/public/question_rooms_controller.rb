@@ -3,30 +3,52 @@ class Public::QuestionRoomsController < ApplicationController
 
   # マッチメイク画面
   def match_make
-    # ルーム取得システム
-    # 1.まずはマッチング中のルームを検索
-    # 2.なければ準備中のルームを検索
-    # 3.どちらもなければ「スタンバイ謝罪画面」にリダイレクト
-    @question_rooms = QuestionRoom.where(room_status: :matching, is_active: true).limit(3)
-    if @question_rooms.nil?
-      @question_rooms = QuestionRoom.where(room_status: :standby, is_active: true).limit(3)
-      if @question_rooms.nil? || @question_rooms.count < 3
+    # 処理の流れ
+    # 1. 対戦に使うQuestionRoomを3つ取得する。マッチング中>待機中の順に優先して取得する。
+    #     -> もし3つ取得できなかったときは「準備中画面」に遷移する。
+    # 2. QuestionRoom(お題)に紐づくPanelist(回答者)をそれぞれに対し1つずつ作成。
+    # 3. サブスクライブ時に使用するroom_idをhtmlのdata-属性に渡すための文字列を作成
+
+    product = question_rooms1 = QuestionRoom.where(room_status: :matching, is_active: true).limit(3)  # マッチング中の部屋を探す
+    qr1_count = question_rooms1.count # 発見した部屋の数
+    # 発見した部屋の数が3部屋未満の場合、足りない分を待機中の部屋から探す
+    if qr1_count < 3
+      question_rooms2 = QuestionRoom.where(room_status: :standby, is_active: true).limit(3-qr1_count) # 待機中の部屋を探す
+      qr2_count = question_rooms2.count #今回発見した部屋の数
+      # 2回の部屋取得数の合計が3部屋未満の場合、発見失敗ー＞「準備中画面」へ遷移
+      if (qr1_count+qr2_count) < 3
         redirect_to stand_by_path
       end
+      # 2回の部屋取得の結果3部屋揃った場合、取得した部屋を一つにまとめ、(Relationをor関数でまとめる)ビューへ渡す
+      product = question_rooms1.or(question_rooms2)
     end
-    @question_rooms = QuestionRoom.all
+    # 取得したマッチング中の部屋3部屋をマッチングビューに渡す
+    @question_rooms = product
+
     #Panelistレコードを生成、dbに保存
     @question_rooms.each do |question_room|
       Panelist.create(question_room_id: question_room.id, user_id: current_user.id)
     end
+
+    # viewの「data-」属性に今回使うQuestionRoomのidを持たせるための文字列作成
+    count = 1
+    qr_ids = "{"
+    @question_rooms.each do |question_room|
+      qr_ids += "\"qr#{count}_id\":\"#{question_room.id}\""
+      count += 1
+      if count <= @question_rooms.count
+        qr_ids += ","
+      end
+    end
+    qr_ids += "}"
+    @qr_ids = qr_ids
   end
 
   def battle
     # 今回使用するお題ルームを3つ再度取得
-    panelists = Panelist.where(user_id: current_user.id).limit(3).order("created_at DESC")
-    qr1 = QuestionRoom.find(panelists[0].question_room_id)
-    qr2 = QuestionRoom.find(panelists[1].question_room_id)
-    qr3 = QuestionRoom.find(panelists[2].question_room_id)
+    qr1 = QuestionRoom.find(params[:qr1_id])
+    qr2 = QuestionRoom.find(params[:qr2_id])
+    qr3 = QuestionRoom.find(params[:qr3_id])
     @question_rooms = {qr1: qr1, qr2: qr2, qr3: qr3}
   end
 
