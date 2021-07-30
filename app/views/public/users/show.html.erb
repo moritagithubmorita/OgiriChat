@@ -2,7 +2,7 @@
   <div class="row justify-content-center">
     <div class="col-lg-10 d-flex justify-content-center">
       <h1>
-        <%= render partial: 'templates/user_name', locals: {user: user} %>
+        <%= render partial: 'templates/user_name', locals: {user: @user} %>
         さんの個人情報
       </h1>
     </div>
@@ -24,7 +24,10 @@
         </tr>
         <tr>
           <th>平均ナイス獲得数</th>
-          <% average = @user.total_nice_count@ / @user.total_answer_count %>
+          <% average = 0 %>
+          <% if @user.total_answer_count != 0 %>
+            <% average = @user.total_nice_count / @user.total_answer_count %>
+          <% end %>
           <td><label><%= "#{average}" %>個</label></td>
         </tr>
         <tr>

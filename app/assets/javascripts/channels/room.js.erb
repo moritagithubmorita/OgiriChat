@@ -46,7 +46,19 @@ $(document).on('turbolinks:load', function() {
         // 入室済みユーザ人数が規定値(2人)に達したらbattle.html.erbに遷移
         if(user_count==NUMBER_OF_PEOPLE){
           setTimeout(function(){
-            window.location.href = '<%= Rails.application.routes.url_helpers.battle_path %>';
+            // パラメータ(qr_ids)を渡すための文字列を作成
+            var qr_ids_text = "?"
+            var cnt=1
+            $.each(qr_ids, function(key, value){
+              qr_ids_text+=('qr'+cnt+'_id='+value)
+              if(cnt < Object.keys(qr_ids).length){
+                qr_ids_text+='&'
+              }
+              cnt+=1
+            })
+
+            // 遷移
+            window.location.href = '<%= Rails.application.routes.url_helpers.battle_path %>'+qr_ids_text;
           }, 1000);
         }
 
