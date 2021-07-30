@@ -6,9 +6,9 @@ class Public::QuestionRoomsController < ApplicationController
     # 処理の流れ
     # 1. 対戦に使うQuestionRoomを3つ取得する。マッチング中>待機中の順に優先して取得する。
     #     -> もし3つ取得できなかったときは「準備中画面」に遷移する。
-    # 2. QuestionRoom(お題)に紐づくPanelist(回答者)をそれぞれに対し1つずつ作成。
-    # 3. サブスクライブ時に使用するroom_idをhtmlのdata-属性に渡すための文字列を作成
-    # 4. その部屋にすでに他の入室者がいた場合それを取得
+    # 2. その部屋にすでに他の入室者がいた場合それを取得
+    # 3. user取得"後"、QuestionRoom(お題)に紐づくPanelist(回答者)をそれぞれに対し1つずつ作成。
+    # 4. サブスクライブ時に使用するroom_idをhtmlのdata-属性に渡すための文字列を作成
 
     product = question_rooms1 = QuestionRoom.where(room_status: :matching, is_active: true).limit(3)  # マッチング中の部屋を探す
     qr1_count = question_rooms1.count # 発見した部屋の数
@@ -25,6 +25,13 @@ class Public::QuestionRoomsController < ApplicationController
     end
     # 取得したマッチング中の部屋3部屋をマッチングビューに渡す
     @question_rooms = product
+
+    # 先に入室しているユーザを取得。ビューでcountを使うため1つのデータ取得ではあるがwhereで取得する
+    begin
+      @user = User.where(id: Panelist.find_by(question_room_id: @question_rooms.first.id).user_id)
+    rescue
+      @user = User.where(id: -1)  # count==0のための処理
+    end
 
     #Panelistレコードを生成、dbに保存
     @question_rooms.each do |question_room|
@@ -43,14 +50,7 @@ class Public::QuestionRoomsController < ApplicationController
     end
     qr_ids += "}"
     @qr_ids = qr_ids
-    
-    # 先に入室しているユーザを取得。ビューでcountを使うため1つのデータ取得ではあるがwhereで取得する
-    begin
-      @user = User.where(id: Panelist.find_by(question_room_id: @question_rooms.first.id).user_id)
-    rescue
-      @user = User.where(id: -1)  # count==0のための処理
-    end
-    
+
   end
 
   def battle
