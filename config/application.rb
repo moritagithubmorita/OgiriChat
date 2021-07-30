@@ -13,7 +13,7 @@ module OgiriChat
 
     # デフォルトのロケール(各地域毎の設定群)を日本に設定
     config.i18n.default_locale = :ja
-    config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb.ynl}').to_s]
+    config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
 
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration can go into files in config/initializers

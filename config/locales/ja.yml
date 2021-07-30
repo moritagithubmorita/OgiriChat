@@ -2,7 +2,7 @@ ja:
   time:
     formats:
       default: "%Y/%m/%d %H:%M:%S"
-  enum:
+  enums:
     question_room:
       room_status:
         standby: "待機中"

@@ -12,6 +12,6 @@ class RoomChannel < ApplicationCable::Channel
   end
 
   def render_message
-    return ApplicationController.renderer.render partial: 'public/question_rooms/match_make_user', locals: {user: current_user }
+    return ApplicationController.renderer.render partial: 'public/question_rooms/match_make_user', locals: {user: current_user}
   end
 end

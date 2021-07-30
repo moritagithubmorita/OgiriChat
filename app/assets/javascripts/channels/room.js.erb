@@ -1,0 +1,65 @@
+/* まず「.erb」になっている理由
+  A. javascriptで画面遷移をさせるときにRailsのルーティングを使いたかった。
+     そのために Rails.application.routes.url_helpers.users_path という Rubyコードが必要だった。
+     だから。
+*/
+
+/* マッチメイクに関するjs
+  1.先に入室しているユーザがいればその人数をuser_countに取得する
+  2.htmlのdata属性からマッチメイク対象のQuestionRoom(部屋)のidを連想配列で取得
+  3.サブスクライブ依頼をサーバーに出し、全ての部屋の接続が成功したら入室したことを最後のチャンネルに伝え、ログインユーザ情報をブロードキャストする。
+  4.receivedでユーザ情報をキャッチし、ユーザ情報を表示する
+*/
+
+/*global $*/
+
+var NUMBER_OF_PEOPLE = 2  // 入室できるユーザの定員
+var user_count = 0  // 入室したユーザの人数
+var connected_room_count = 0  // 接続に成功したチャンネル数
+
+$(document).on('turbolinks:load', function() {
+  user_count = $('#match-make').data('user-count'); // 先に入室したユーザの人数を取得
+  var qr_ids = $('#match-make').data('question-room-ids');  //全question_room(3つ)のidを連想配列で取得
+  var roomChannels = {} // チャンネルサブスクリプション用ハッシュ
+
+  // チャンネルサブスクリプションを作成し、連想配列に格納する
+  var count = 1
+  $.each(qr_ids, function(key, value){
+    var key_name = "roomChannel"+count  // キー作成
+     roomChannels[key_name] = App.cable.subscriptions.create({ channel: 'RoomChannel', question_room_id: value },{
+
+      // チャンネルに接続されたら接続カウンタを+1
+      // もし全部の部屋に接続できたら入室したことを"最後の部屋のみ"に通知し、ログインユーザ情報をブロードキャストさせる
+      // また同時に入室人数を+1する
+      connected: function() {
+        connected_room_count+=1;
+        user_count+=1;
+
+        // 全ての部屋をサブスクライブできたので入室したことをサーバに伝える
+        if(connected_room_count == Object.keys(qr_ids).length){
+          this.perform('entered_room',{})
+        }
+
+        // 入室済みユーザ人数が規定値(2人)に達したらbattle.html.erbに遷移
+        if(user_count==NUMBER_OF_PEOPLE){
+          setTimeout(function(){
+            window.location.href = '<%= Rails.application.routes.url_helpers.battle_path %>';
+          }, 1000);
+        }
+
+      },
+
+      disconneted: function() {
+      },
+
+      // 入室したユーザ情報(外部テンプレート)を受け取り表示する(append)
+      received: function(data){
+        return $('#match-make').append(data['message']);
+      }
+    });
+
+    count +=1
+
+  })
+
+});
