@@ -7,8 +7,8 @@ class RoomChannel < ApplicationCable::Channel
     # Any cleanup needed when channel is unsubscribed
   end
 
-  def entered_room
-    ActionCable.server.broadcast "room_channel_#{params[:question_room_id]}", message: render_message
+  def entered_room(data)
+    ActionCable.server.broadcast "room_channel_#{data[:question_room_id]}", message: render_message
   end
 
   def render_message

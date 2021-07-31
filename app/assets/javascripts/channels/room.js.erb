@@ -19,7 +19,6 @@ var connected_room_count = 0  // 接続に成功したチャンネル数
 
 $(document).on('turbolinks:load', function() {
   user_count = $('#match-make').data('user-count'); // 入室したユーザの人数を取得
-  console.log(user_count)
   var qr_ids = $('#match-make').data('question-room-ids');  //全question_room(3つ)のidを連想配列で取得
   var roomChannels = {} // チャンネルサブスクリプション用ハッシュ
 
@@ -34,13 +33,11 @@ $(document).on('turbolinks:load', function() {
       // また同時に入室人数を+1する
       connected: function() {
         connected_room_count+=1;
-        console.log("connected")
 
         // 全ての部屋をサブスクライブできたので入室したことをサーバに伝える
         if(connected_room_count == Object.keys(qr_ids).length){
-          this.perform('entered_room',{})
+          this.perform('entered_room',{question_room_id: value})
           user_count+=1;  // ログインユーザ人数を+1
-          console.log(user_count)
         }
 
         // 入室済みユーザ人数が規定値(2人)に達したらbattle.html.erbに遷移

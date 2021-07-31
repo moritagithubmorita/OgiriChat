@@ -5,10 +5,10 @@
     </div>
   </div>
   <div class="row justify-content-center">
-    <div class="col-lg-12 d-flex justify-content-center" id="match-make" data-user-count="<%= @user.count %>" data-question-room-ids=<%= @qr_ids %>> <%#= 3部屋分のidを「(例):qr1_id」というキーで持たせる%>
+    <div class="col-lg-12 d-flex justify-content-center" id="match-make" data-user-count="<%= @users.count %>" data-question-room-ids=<%= @qr_ids %>> <%#= 3部屋分のidを「(例):qr1_id」というキーで持たせる%>
       <!-- ログインユーザよりも先に入室していたユーザがいた場合、そのユーザ情報を表示 -->
-      <% if @user.count > 0 %>
-        <%= render partial: 'public/question_rooms/match_make_user', locals: {user: @user.first} %>
+      <% if @users.count > 0 %>
+        <%= render partial: 'public/question_rooms/match_make_user', locals: {user: @users.first} %>
       <% end %>
     </div>
   </div>

@@ -2,11 +2,15 @@
   <div class="row">
     <div class="col-lg-10 mx-auto justify-content-center">
       <h1>お題</h1>
-      <p id="question"></p>
+      <p id="question" data-question-room-ids="<%= @qr_ids %>"></p>
     </div>
   </div>
   <div class="row">
     <div class="col-lg-10" id="answers">
     </div>
+  </div>
+  <div class="row">
+    <%= text_area_tag :answer, id:"answer-form" %>
+    <button>回答！</button>
   </div>
 </div>

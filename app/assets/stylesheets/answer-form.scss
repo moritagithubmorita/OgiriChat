@@ -1,0 +1,10 @@
+.answer-form{
+
+  &__submit{  // 無効時(デフォルト)
+    background-color:gray;
+
+    &--active{  // 有効時
+      background-color:blue !important;
+    }
+  }
+}
