@@ -1,0 +1,13 @@
+.answer{
+  &__nice{
+    background-image: url(img/dark-heart.png);
+    &--active{
+      background-image: url(img/heart.png) !important;
+    }
+  }
+  
+  
+  &__total-nice-count{
+    
+  }
+}

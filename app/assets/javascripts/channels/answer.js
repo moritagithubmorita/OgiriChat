@@ -41,7 +41,8 @@ $(document).on('turbolinks: load', function(){
         return this.perform('answer', {
               answer: answer
             });
-      }
+      },
+      
     });
     cnt+=1
   })
@@ -129,9 +130,10 @@ function prepare_for_next(cnt){
 
   //フォームに入力中の内容を消す
   $('answer-form').value=""
-
+  
   // current_ac_keyを進める
   current_ac_key = "qr"+(cnt+1)
+  
 }
 
 // submitボタンを有効/無効

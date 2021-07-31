@@ -1,5 +1,6 @@
-<div class="answer row d-flex justify-content-center">
+<div class="answer row d-flex justify-content-center" data-question-room-id="<%= question_room_id %>">
   <p><%= answer %></p>
   <label><%= current_user.name %></label>
-  <div class="answer__nice"></div>
+  <div class="answer__nice" data-answer-id="<%= answer_id %>"></div>
+  <label class="answer__total-nice-count" data-answer-id="<%= answer_id %>">0</label>
 </div>
