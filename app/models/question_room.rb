@@ -14,7 +14,6 @@ class QuestionRoom < ApplicationRecord
   attribute :is_active, :boolean, default: true
   attribute :is_set, :boolean, default: false
   attribute :room_status, :integer, default: :standby
-  attribute :panelist_count, :integer, default: 0
 
   validates :body, :added_by, presence: true
 

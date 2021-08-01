@@ -1,4 +1,16 @@
 <div class="container-fluid">
+  <!-- フォローを促すモーダル -->
+  <div class="row follow-modal" data-panelist-ids= "<%= @panelist_ids %>">
+    <div class="col-lg-10 mx-auto follow-modal__contents-area">
+      <h1 class="mx-auto">フォローしますか？</h1>
+      <div class="row">
+        <div class="col-lg-10 mx-auto d-flex justify-content-center follow-modal__user-area" id="follow-modal__user-area"></div>
+      </div>
+      <%= link_to 'トップへ', root_path %>
+    </div>
+  </div>
+  
+  <!-- 以下対戦終了画面 -->
   <div class="row">
     <div class="col-lg-10">
       <h1>お疲れ様でした！</h1>
@@ -10,7 +22,7 @@
         <%= link_to '対戦結果詳細', result_path, class:"col-lg-3" %>
       </div>
       <div>
-        <label>トップへ</label>
+        <button id="finish__top-button">トップへ</button>
       </div>
     </div>
   </div>

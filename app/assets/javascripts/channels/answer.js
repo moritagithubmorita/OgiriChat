@@ -1,29 +1,44 @@
 /*global $*/
 
-// 対戦の各フェーズのdelay。battle()で使用
+/* 対戦の各フェーズのdelay。battle()で使用
+   1.各お題の開始時間からのdelay
+    SET_DELAY/START_ANSWER_DELAY/FINISH_ANSWER_DELAY
+   2.対戦終了時間からのdelay
+    FINISH_BATTLE_DELAY
+*/
 var SET_DELAY = 2000
-var START_DELAY = 3000
-var FINISH_DELAY = 123000
+var START_ANSWER_DELAY = 3000
+var FINISH_ANSWER_DELAY = 123000
+var FINISH_BATTLE_DELAY = 2000
 
 var connected_channel_count = 0 // 接続済みチャンネル数
 var submit_is_active = false  //submit送信の有効/無効
 var enter_is_active = false //エンターキーの有効/無効
 var answerChannels = {} // チャンネルサブスクリプションs
 var qr_ids = {} // QuestionRoomのids
-var current_ac_key = "qr1"
+var current_ac_key = "qr1"  // 現在のお題に紐づいたAnswerChannelを指すキー(answerChannels)
+var qr_bodies = {}  // QuestionRoomのお題s
 
-$(document).on('turbolinks: load', function(){
-  var cnt = 1
-
+$(document).on('turbolinks:load', function(){
   qr_ids = $('#question').data('question-room-ids') // 今回使う問題のidを取得
+  qr_bodies = $('#question').data('question-room-bodies') // 今回使う問題のbodyを取得
 
+  // 回答用のチャンネルをサブスクライブする
+  var cnt = 1
   $.each(qr_ids, function(key, value){
     var keyName = "qr"+cnt
     answerChannels[keyName] = App.cable.subscriptions.create({channel: "AnswerChannel", question_room_id: value}, {
+
+      // 全ての回答用チャンネルをサブスクライブできたら対戦を開始する
       connected: function() {
         // Called when the subscription is ready for use on the server
         console.log('connected')
         connected_channel_count+=1
+
+        // 全ての接続が完了したらお題をスタートする
+        if(connected_channel_count==Object.keys(qr_ids).length){
+          battle_manager()  //対戦を管理する関数
+        }
       },
 
       disconnected: function() {
@@ -42,41 +57,43 @@ $(document).on('turbolinks: load', function(){
               answer: answer
             });
       },
-      
+
     });
     cnt+=1
   })
 })
 
 // 対戦を管理する
-function battle_manager(answerChannels){
+function battle_manager(){
   /* 処理内容
     ・対戦をスケジューリングする
       ※setIntervalは使用せず、1回のeachで全ての問題に関するスケジューリングをしてしまう
   */
 
+  // 対戦をスケジューリング
+  // 1問目の準備〜3問目の終了処理までのスケジューリング
   var cnt = 1
   $.each(answerChannels, function(key, value){
-    var qr_key = 'qr'+cnt
-    battle(qr_ids[qr_key], cnt)
+    battle(cnt)
     cnt+=1
   })
+
+  // 対戦終了
+  finish_battle()
 }
 
 // 1回の対戦そのもの
-function battle(qr_id, cnt){
-  //qr_id...今回のお題のid
+function battle(cnt){
   //cnt...現在の出題数
 
-  var question_room_body = '<%= QuestionRoom.find(qr_id) %>';
-  var elapsed_time = FINISH_DELAY*cnt // 前の問題終了時点までに経過した時間
+  var elapsed_time = FINISH_ANSWER_DELAY*cnt // 前の問題終了時点までに経過した時間
 
   // お題を表示
-  set_question(question_room_body, SET_DELAY+elapsed_time)
+  set_question(qr_bodies[`qr${cnt}_body`], SET_DELAY+elapsed_time)
   // 回答開始
-  start_answering(START_DELAY+elapsed_time)
+  start_answering(START_ANSWER_DELAY+elapsed_time)
   // 終了
-  finish_answering(FINISH_DELAY+elapsed_time, cnt)
+  finish_answering(FINISH_ANSWER_DELAY+elapsed_time, cnt)
 }
 
 // お題出題
@@ -130,10 +147,18 @@ function prepare_for_next(cnt){
 
   //フォームに入力中の内容を消す
   $('answer-form').value=""
-  
+
   // current_ac_keyを進める
   current_ac_key = "qr"+(cnt+1)
-  
+
+}
+
+// 対戦終了
+function finish_battle(){
+  setTimeout(function(){
+    // ねぎらいページへ遷移
+    window.location.href = '<%= Rails.application.routes.url_helpers.finish_path %>'+'?qr_id='+qr_ids['qr1_id']
+  })
 }
 
 // submitボタンを有効/無効

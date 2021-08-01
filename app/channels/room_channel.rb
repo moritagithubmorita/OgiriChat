@@ -8,7 +8,7 @@ class RoomChannel < ApplicationCable::Channel
   end
 
   def entered_room(data)
-    ActionCable.server.broadcast "room_channel_#{data[:question_room_id]}", message: render_message
+    ActionCable.server.broadcast "room_channel_#{data["question_room_id"]}", message: render_message
   end
 
   def render_message

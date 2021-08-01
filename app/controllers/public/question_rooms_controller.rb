@@ -1,6 +1,6 @@
 class Public::QuestionRoomsController < ApplicationController
   skip_before_action :redirected_from_match_make?, only: :battle
-
+  
   # マッチメイク画面
   def match_make
     # 処理の流れ
@@ -11,14 +11,14 @@ class Public::QuestionRoomsController < ApplicationController
     # 4. users取得"後"、QuestionRoom(お題)に紐づくPanelist(回答者)をそれぞれに対し1つずつ作成。
     # 5. サブスクライブ時に使用するroom_idをhtmlのdata-属性に渡すための文字列を作成
 
-    product = question_rooms1 = QuestionRoom.where(room_status: :matching, is_active: true, panelist_count: 1).limit(3)  # マッチング中の部屋を探す
+    product = question_rooms1 = QuestionRoom.where(room_status: :matching, is_active: true,).limit(3)  # マッチング中の部屋を探す
     qr1_count = question_rooms1.count # 発見した部屋の数
     # 発見した部屋の数が3部屋未満の場合、足りない分を待機中の部屋から探す
     if qr1_count < 3
       question_rooms2 = QuestionRoom.where(room_status: :standby, is_active: true).limit(3-qr1_count) # 待機中の部屋を探す
       qr2_count = question_rooms2.count #今回発見した部屋の数
       # 2回の部屋取得数の合計が3部屋未満の場合、発見失敗ー＞「準備中画面」へ遷移
-      if (qr1_count+qr2_count) < 3
+      if (qr1_count+qr2_count) != 3
         redirect_to stand_by_path
       end
       # 2回の部屋取得の結果3部屋揃った場合、取得した部屋を一つにまとめ、(Relationをor関数でまとめる)ビューへ渡す
@@ -42,8 +42,6 @@ class Public::QuestionRoomsController < ApplicationController
     #Panelistレコードを生成、dbに保存
     @question_rooms.each do |question_room|
       Panelist.create(question_room_id: question_room.id, user_id: current_user.id)
-      # 紐づくQuestionRoomのpanelist_countを+1
-      question_room.update(panelist_count: question_room.panelist_count+1)
     end
 
     # viewの「data-」属性に今回使うQuestionRoomのidを持たせるための文字列作成
@@ -76,18 +74,42 @@ class Public::QuestionRoomsController < ApplicationController
     # viewの「data-」属性に今回使うQuestionRoomのidを持たせるための文字列作成
     count = 1
     qr_ids = "{"
+    qr_bodies = "{"
     @question_rooms.each do |key, value|
       qr_ids += "\"qr#{count}_id\":\"#{value}\""
+      qr_bodies += "\"qr#{count}_body\":\"#{value.body}\""
       count += 1
       if count <= @question_rooms.count
         qr_ids += ","
+        qr_bodies += ","
       end
     end
     qr_ids += "}"
+    qr_bodies += "}"
     @qr_ids = qr_ids
+    @qr_bodies = qr_bodies
   end
 
   def finish
+    # 処理内容
+    # 1.自分以外のpanelistで、かつフォローしてないユーザのidを取得
+    
+    @panelist_ids = {}
+    
+    # 参戦した自分以外のpanelistのうち、未フォローのユーザのみ取得
+    question_room = params[:qr_id]
+    panelists = question_room.panelists.where.not(user_id: current_user)
+    cnt = 1
+    panelists.each do |panelist|
+      # panelistをフォロー済みの場合はフォロー確認の対象から外す(ハッシュに加えない)
+      begin panelist.followers.find(current_user.id)
+      # 未フォローの場合、フォロー確認の対象とする(ハッシュに加えビューに渡す)
+      rescue
+        @panelist_ids["panelist#{cnt}_id"]=panelist.user_id
+        cnt+=1
+      end
+    end
+    
   end
 
   def result
