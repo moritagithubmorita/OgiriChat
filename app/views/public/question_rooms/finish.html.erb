@@ -1,15 +1,11 @@
 <div class="container-fluid">
   <!-- フォローを促すモーダル -->
-  <div class="row follow-modal" data-panelist-ids= "<%= @panelist_ids %>">
-    <div class="col-lg-10 mx-auto follow-modal__contents-area">
-      <h1 class="mx-auto">フォローしますか？</h1>
-      <div class="row">
-        <div class="col-lg-10 mx-auto d-flex justify-content-center follow-modal__user-area" id="follow-modal__user-area"></div>
-      </div>
-      <%= link_to 'トップへ', root_path %>
+  <div class="row follow-modal-area" data-panelist-ids= "<%= @panelist_ids %>">
+    <div class="col-lg-10">
+      <%= render partial: 'public/question_rooms/finish_modal' %>
     </div>
   </div>
-  
+
   <!-- 以下対戦終了画面 -->
   <div class="row">
     <div class="col-lg-10">
@@ -19,7 +15,7 @@
   <div class="row">
     <div class="col-lg-10">
       <div>
-        <%= link_to '対戦結果詳細', result_path, class:"col-lg-3" %>
+        <%= link_to '対戦結果詳細', result_path(qr1_id: @question_room_ids[:qr1_id], qr2_id: @question_room_ids[:qr2_id], qr3_id: @question_room_ids[:qr3_id]), class:"col-lg-3" %>
       </div>
       <div>
         <button id="finish__top-button">トップへ</button>

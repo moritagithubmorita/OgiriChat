@@ -1,6 +1,6 @@
 class Public::QuestionRoomsController < ApplicationController
   skip_before_action :redirected_from_match_make?, only: :battle
-  
+
   # マッチメイク画面
   def match_make
     # 処理の流れ
@@ -61,23 +61,23 @@ class Public::QuestionRoomsController < ApplicationController
 
   def battle
     # 今回使用するお題ルームを3つ再度取得
-    qr1 = QuestionRoom.find(params[:qr1_id])
-    qr2 = QuestionRoom.find(params[:qr2_id])
-    qr3 = QuestionRoom.find(params[:qr3_id])
-    @question_rooms = {qr1: qr1, qr2: qr2, qr3: qr3}
+    qr1 = QuestionRoom.where(id: params[:qr1_id])
+    qr2 = QuestionRoom.where(id: params[:qr2_id])
+    qr3 = QuestionRoom.where(id: params[:qr3_id])
+    @question_rooms = qr1.or(qr2).or(qr3)
 
     # 使用するお題(question_rooms)のroom_statusをrunningにする
-    @question_rooms.each do |key, value|
-      value.running!
+    @question_rooms.each do |question_room|
+      question_room.running!
     end
 
     # viewの「data-」属性に今回使うQuestionRoomのidを持たせるための文字列作成
     count = 1
     qr_ids = "{"
     qr_bodies = "{"
-    @question_rooms.each do |key, value|
-      qr_ids += "\"qr#{count}_id\":\"#{value}\""
-      qr_bodies += "\"qr#{count}_body\":\"#{value.body}\""
+    @question_rooms.each do |question_room|
+      qr_ids += "\"qr#{count}_id\":\"#{question_room.id}\""
+      qr_bodies += "\"qr#{count}_body\":\"#{question_room.body}\""
       count += 1
       if count <= @question_rooms.count
         qr_ids += ","
@@ -93,31 +93,61 @@ class Public::QuestionRoomsController < ApplicationController
   def finish
     # 処理内容
     # 1.自分以外のpanelistで、かつフォローしてないユーザのidを取得
-    
+    # 2.パネリストidを渡すための文字列を作成
+
     @panelist_ids = {}
-    
+
     # 参戦した自分以外のpanelistのうち、未フォローのユーザのみ取得
-    question_room = params[:qr_id]
-    panelists = question_room.panelists.where.not(user_id: current_user)
+    @question_room_ids = {qr1_id: params[:qr1_id], qr2_id: params[:qr2_id], qr3_id: params[:qr3_id]}
+    panelists = QuestionRoom.find(@question_room_ids[:qr1_id]).panelists.where.not(user_id: current_user)
+
+    # 文字列作成
+    panelist_ids = "{"
     cnt = 1
     panelists.each do |panelist|
       # panelistをフォロー済みの場合はフォロー確認の対象から外す(ハッシュに加えない)
-      begin panelist.followers.find(current_user.id)
+      begin panelist.followers.find_by(follower_id: current_user.id)
       # 未フォローの場合、フォロー確認の対象とする(ハッシュに加えビューに渡す)
       rescue
-        @panelist_ids["panelist#{cnt}_id"]=panelist.user_id
-        cnt+=1
+        panelist_ids += "\"panelist#{cnt}_id\":\"#{panelist.user_id}\""
+        cnt += 1
+        if cnt <= panelists.count
+          panelist_ids += ","
+        end
+        panelist_ids += "}"
+
+        @panelist_ids = panelist_ids
       end
     end
-    
+
   end
 
   def result
-    panelists = Panelist.where(user_id: current_user.id).limit(3).order("created_at DESC")
-    qr1 = QuestionRoom.find(panelists[0].question_room_id)
-    qr2 = QuestionRoom.find(panelists[1].question_room_id)
-    qr3 = QuestionRoom.find(panelists[2].question_room_id)
-    @question_rooms = {qr1: qr1, qr2: qr2, qr3: qr3}
+    qr1 = QuestionRoom.where(id: params[:qr1_id].to_i)
+    qr2 = QuestionRoom.where(id: params[:qr2_id].to_i)
+    qr3 = QuestionRoom.where(id: params[:qr3_id].to_i)
+    @question_rooms = qr1.or(qr2).or(qr3)
+
+    panelists = @question_rooms.first.panelists.where.not(user_id: current_user)
+
+    # 文字列作成
+    panelist_ids = "{"
+    cnt = 1
+    panelists.each do |panelist|
+      # panelistをフォロー済みの場合はフォロー確認の対象から外す(ハッシュに加えない)
+      begin panelist.followers.find_by(follower_id: current_user.id)
+      # 未フォローの場合、フォロー確認の対象とする(ハッシュに加えビューに渡す)
+      rescue
+        panelist_ids += "\"panelist#{cnt}_id\":\"#{panelist.user_id}\""
+        cnt += 1
+        if cnt <= panelists.count
+          panelist_ids += ","
+        end
+        panelist_ids += "}"
+
+        @panelist_ids = panelist_ids
+      end
+    end
   end
 
 end

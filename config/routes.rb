@@ -1,14 +1,14 @@
 Rails.application.routes.draw do
-  devise_for :users, :controllers =>{
-    :sessions => 'public/sessions',
-    :registrations => 'public/registrations'
-  }
-
   scope module: :public do
     resources :notices, only: :index
     resources :inquries, only: [:new, :create]
     resource :users, only: [:show, :edit, :update]
   end
+
+  devise_for :users, :controllers =>{
+    :sessions => 'public/sessions',
+    :registrations => 'public/registrations'
+  }
 
   root to: "public/homes#top"
   get "homes/stand_by" => 'public/homes#stand_by', as: 'stand_by'
@@ -20,6 +20,8 @@ Rails.application.routes.draw do
 
   get "users/confirm" => 'public/users#confirm', as: 'confirm'
   patch "users/withdraw" => 'public/users#withdraw', as: 'withdraw'
+
+  post "follows/follow" => 'public/follows#follow', as: 'follow'
 
   devise_for :admin, :controllers =>{
     :sessions => 'admin/sessions'

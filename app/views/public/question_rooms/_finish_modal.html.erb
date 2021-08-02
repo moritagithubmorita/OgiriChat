@@ -1,0 +1,13 @@
+<div class="follow-modal" id="follow-modal">
+  <div class="follow-modal__contents-area">
+    <h1>フォローしますか？</h1>
+    <div>
+      <%= form_with url: follow_path, local:true do |f| %>
+        <div class="form-group follow-modal__user-area" id="follow-modal__user-area">
+          <!-- 対戦に参加した未フォローユーザのチェックボックスを表示する-->
+        </div>
+        <%= f.submit 'トップへ' %>
+      <% end %>
+    </div>
+  </div>
+</div>

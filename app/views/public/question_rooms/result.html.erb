@@ -1,4 +1,11 @@
 <div class="container-fluid">
+  <!-- フォローを促すモーダル -->
+  <div class="row follow-modal-area" data-panelist-ids= "<%= @panelist_ids %>">
+    <div class="col-lg-10">
+      <%= render partial: 'public/question_rooms/follow_modal' %>
+    </div>
+  </div>
+  
   <div class="row">
     <div class="col-lg-10">
       <h1>対戦結果詳細</h1>
@@ -29,7 +36,7 @@
   <% end %>
   <div class="row">
     <div class="col">
-      <label>トップへ</label>
+      <button id="result__top-button">トップへ</button>
     </div>
   </div>
 </div>
