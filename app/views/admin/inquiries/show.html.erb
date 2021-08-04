@@ -1,0 +1,44 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-lg-10">
+      <h1>お問い合わせ詳細</h1>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-10">
+      <table class="table">
+        <tr>
+          <th>お問い合わせ日時</th>
+          <td><%= l @inquiry.created_at %></td>
+        </tr>
+        <tr>
+          <th>ユーザ名/ユーザid</th>
+          <td><%= User.find(@inquiry.user_id).name %>/<%= @inquiry.user_id %></td>
+        </tr>
+        <tr>
+          <th>件名</th>
+          <td><%= @inquiry.title %></td>
+        </tr>
+        <tr>
+          <th>お問い合わせ内容</th>
+          <td><%= @inquiry.body %></td>
+        </tr>
+        <tr>
+          <th>解決/未解決</th>
+          <td>
+            <% if @inquiry.is_solved %>
+              <label>解決済み</label>
+            <% else %>
+              <label>未解決</label>
+            <% end %>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-3">
+      <%= link_to '編集する', edit_admin_inquiry_path(@inquiry.id) %>
+    </div>
+  </div>
+</div>

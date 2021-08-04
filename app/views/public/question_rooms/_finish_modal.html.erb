@@ -1,12 +1,12 @@
 <div class="follow-modal" id="follow-modal">
-  <div class="follow-modal__contents-area">
+  <div class="follow-modal__contents-area mx-auto">
     <h1>フォローしますか？</h1>
     <div>
       <%= form_with url: follow_path, local:true do |f| %>
-        <div class="form-group follow-modal__user-area" id="follow-modal__user-area">
+        <div class="form-group follow-modal__user-area mx-auto" id="follow-modal__user-area">
           <!-- 対戦に参加した未フォローユーザのチェックボックスを表示する-->
         </div>
-        <%= f.submit 'トップへ' %>
+        <%= f.submit 'トップへ', class:"mx-auto" %>
       <% end %>
     </div>
   </div>

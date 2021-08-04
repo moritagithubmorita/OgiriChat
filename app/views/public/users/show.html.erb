@@ -2,7 +2,7 @@
   <div class="row justify-content-center">
     <div class="col-lg-10 d-flex justify-content-center">
       <h1>
-        <%= render partial: 'templates/user_name', locals: {user: @user} %>
+        <%= render partial: 'templates/user_name', locals: {user: @user, url: ""} %>
         さんの個人情報
       </h1>
     </div>
@@ -12,7 +12,7 @@
       <table class="table table-borderless">
         <tr>
           <th>名前</th>
-          <td><%= @user.name %></td>
+          <td><%= render partial: 'templates/user_name', locals: {user: @user, url: ""} %></td>
         </tr>
         <tr>
           <th>email</th>
@@ -33,6 +33,20 @@
         <tr>
           <th>獲得ナイス総数</th>
           <td><label><%= @user.total_nice_count %>個</label></td>
+        </tr>
+        <tr>
+          <th>フォロー</th>
+          <td>
+            <% cnt = 1 %>
+            <% @follows.each do |follow| %>
+              <div class="row form-group">
+                <label class="col-lg-6"><%= User.find(follow.follow_id).name %></label>
+                <input type="checkbox" name="follow<%= cnt %>_check" id="follow<%= cnt %>_check" class="follow__check-box" value="true" checked="checked" data-the-other-id="<%= follow.follow_id %>">
+                <%#= check_box_tag "follow#{cnt}_check", checked=true, class:"col-lg-2 follow_check_box", id:"follow#{cnt}_check_box", data: {theOhterId: follow.follow_id} %>
+              </div>
+              <% cnt += 1 %>
+            <% end %>
+          <td>
         </tr>
       </table>
     </div>

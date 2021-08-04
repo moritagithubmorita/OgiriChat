@@ -17,7 +17,8 @@
         </div>
         <div class="row form-group">
           <label class="col-lg-3">ランク変更</label>
-          <%= f.select :rank, @ranks, class:"col-lg-4" %>
+          <!-- enum_helperで選択肢を日本語化-->
+          <%= f.select :rank, @rank_keys.map{|k| [I18n.t("enums.user.rank.#{k}"), k]}, class:"col-lg-4" %>
         </div>
         <div class="row">
           <%= f.submit '変更を保存' %>

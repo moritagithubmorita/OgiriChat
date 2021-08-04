@@ -1,0 +1,33 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-lg-10">
+      <h1>ユーザ情報編集</h1>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-10">
+      <%= form_with model: @user, url: "/admin/users/#{@user.id}", local: true do |f| %>
+        <div class="row form-group">
+          <label class="col-lg-3">名前</label>
+          <%= f.text_field :name, class:"col-lg-4", placeholder: "名前"  %>
+        </div>
+        <div class="row form-group">
+          <label class="col-lg-3">email</label>
+          <%= f.email_field :email, class:"col-lg-9", placeholder: "ogiri@ogiri.com" %>
+        </div>
+        <div class="row form-group">
+          <label class="col-lg-3">ランク変更</label>
+          <!-- enum_helperで選択肢を日本語化-->
+          <%= f.select :rank, User.ranks_i18n.keys.map{|k| [I18n.t("enums.user.rank.#{k}"), k]}, class:"col-lg-4" %>
+        </div>
+        <div class="row form-group form-inline">
+          <label>会員ステータス</label>
+          <%= f.radio_button :is_active, true %>有効<label> </label><%= f.radio_button :is_active, false %>退会済み
+        </div>
+        <div class="row">
+          <%= f.submit '変更を保存' %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

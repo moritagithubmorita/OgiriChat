@@ -2,22 +2,22 @@
 
 // 背景
 .follow-modal{
-  position: absolute;  // 左上を基準
+  position: fixed;  // フロートモーダル
   top: 0;
   left: 0;
   z-index: 100;  //ビューに重ねて表示
   width: 100vw;
   height: 100vh;
-  background-color: black;
-  opacity: 0.5;
+  background-color: rgba(0, 0, 0, 0.7);
   display: none;  //noneにすることで「見えない壁」を回避。子要素もひっくるめる。
-  
+
   // テキストなどを表示する部分
   &__contents-area{
     position: absolute;
     z-index: 110;  //最前面
     width: 60%;
     height: 60%;
+    background-color:rgba(225, 225, 225, 1) !important;
     // 上下左右中央に表示する設定
     top: 0;
     right: 0;

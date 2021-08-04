@@ -39,7 +39,7 @@
                       <%= link_to '通知', notices_path, class:"nav-link" %>
                     </li>
                     <li class="nav-item">
-                      <%= link_to '問い合わせ', new_inqury_path, class:"nav-link" %>
+                      <%= link_to '問い合わせ', new_inquiry_path, class:"nav-link" %>
                     </li>
                     <li class="nav-item">
                       <%= link_to 'ログアウト', destroy_user_session_path, method: :delete, class:"nav-link" %>
@@ -59,9 +59,15 @@
                     <li class="nav-item">
                       <%= link_to 'ユーザー一覧', admin_users_path, class:"nav-link" %>
                     </li>
-                    <li class="nav-item">
-                      <%= link_to '問い合わせ一覧', admin_inquiries_path, class:"nav-link" %>
-                    </li>
+                    <% if Inquiry.where(is_readed: false).count == 0 %>
+                      <li class="nav-item  navbar__inquiry--default">
+                        <%= link_to '問い合わせ一覧', admin_inquiries_path, class:"nav-link" %>
+                      </li>
+                    <% else %>
+                      <li class="nav-item  navbar__inquiry--unread">
+                        <%= link_to '問い合わせ一覧', admin_inquiries_path, class:"nav-link" %>
+                      </li>
+                    <% end %>
                     <li class="nav-item">
                       <%= link_to 'ログアウト', destroy_admin_session_path, method: :delete, class:"nav-link" %>
                     </li>

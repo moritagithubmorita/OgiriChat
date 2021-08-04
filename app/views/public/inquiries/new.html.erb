@@ -1,0 +1,30 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-lg-10">
+      <h1>お問い合わせ</h1>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-10">
+      <%= render partial: 'templates/error', locals: {model: @inquiry} %>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-8">
+      <%= form_with model: @inquiry, url: inquiries_path, local: true do |f| %>
+        <div class="form-group row">
+          <label class="col-lg-3">件名</label>
+          <%= f.text_field :title, class:"col-lg-6" %>
+        </div>
+        <div class="form-group row">
+          <label class = "col-lg-3">お問い合わせ内容</label>
+          <%= f.text_area :body, class:"col-lg-6" %>
+        </div>
+        <%= f.hidden_field :user_id, value: current_user.id %>
+        <div class="row">
+          <%= f.submit '送信する', id:'inquiry-form__submit' %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

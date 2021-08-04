@@ -1,17 +1,21 @@
 class Public::UsersController < ApplicationController
   def show
     @user = current_user
+
+    # ログインユーザがフォローしているユーザを渡す
+    @follows = current_user.follows.all
   end
 
   def edit
     @user = current_user
 
-    # ログインユーザのランク以下のrankのみ含まれるハッシュを作成
-    @ranks = {}
+    # ログインユーザのランク以下のrankの「キーのみ」が含まれる"配列"を作成
+    # enum_helperを使用するために、ハッシュではなく配列
+    @rank_keys = []
     ranks = User.ranks # rankカラムの値をハッシュで全取得
     ranks.each do |k, v|
       if v<=@user.rank_before_type_cast
-        @ranks.store(k, v)
+        @rank_keys.push(k)
       end
     end
   end
@@ -25,10 +29,21 @@ class Public::UsersController < ApplicationController
     end
   end
 
+  # 退会確認
+  def confirm
+  end
+
+  # 退会処理
+  def withdraw
+    current_user.update(is_active: false)
+    reset_session
+    redirect_to root_path
+  end
+
   private
 
   def user_params
-    params.require(:user).permit(:name, :email)
+    params.require(:user).permit(:name, :email, :rank)
   end
 
 end

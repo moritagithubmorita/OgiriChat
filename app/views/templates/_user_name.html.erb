@@ -1,6 +1,10 @@
 <div>
   <h2>
-    <%= user.name %>
+    <% if url=="" %>
+      <%= user.name %>
+    <% else %>
+      <%= link_to user.name, url %>
+    <% end %>
     <% if user.star_count == 5 %>
       <%= image_tag 'star.png' %>
     <% end %>

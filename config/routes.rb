@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   scope module: :public do
     resources :notices, only: :index
-    resources :inquries, only: [:new, :create]
+    resources :inquiries, only: [:new, :create]
     resource :users, only: [:show, :edit, :update]
   end
 
@@ -22,6 +22,7 @@ Rails.application.routes.draw do
   patch "users/withdraw" => 'public/users#withdraw', as: 'withdraw'
 
   post "follows/follow" => 'public/follows#follow', as: 'follow'
+  get "follows/toggle" => 'public/follows#toggle', as: 'follow_toggle'
 
   devise_for :admin, :controllers =>{
     :sessions => 'admin/sessions'
@@ -33,7 +34,7 @@ Rails.application.routes.draw do
     get '/homes/search' => 'homes#search'
     resources :users, only: [:edit, :update, :index, :show]
     resources :question_rooms
-    resources :inquiries, only: [:update, :index, :show]
+    resources :inquiries, only: [:update, :index, :show, :edit]
   end
 
   mount ActionCable.server => '/cable'

@@ -1,13 +1,22 @@
 .answer{
+  %__nice{
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: right center;
+  }
+
   &__nice{
-    background-image: url(img/dark-heart.png);
+    @extend %__nice;
+    background-image: image-url('dark-heart.png');
+
     &--active{
-      background-image: url(img/heart.png) !important;
+      @extend %__nice;
+      background-image: image-url('heart.png') !important;
     }
   }
-  
-  
+
+
   &__total-nice-count{
-    
+
   }
 }

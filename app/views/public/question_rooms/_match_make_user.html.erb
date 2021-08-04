@@ -4,7 +4,7 @@
     <%= user.rank_i18n %>
   </p>
   <div class="match-make-user__name">
-    <%= render partial: 'templates/user_name', locals: {user: user} %>
+    <%= render partial: 'templates/user_name', locals: {user: user, url: ""} %>
   </div>
   <p class="match-make-user__average">
     <% average = 0 %>

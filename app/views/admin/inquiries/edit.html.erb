@@ -1,0 +1,42 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-lg-10">
+      <h1>お問い合わせ詳細</h1>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-10">
+      <%= form_with model:@inquiry, url: "/admin/inquiries/#{@inquiry.id}", local: true do |f| %>
+        <table class="table">
+          <tr>
+            <th>お問い合わせ日時</th>
+            <td><%= l @inquiry.created_at %></td>
+          </tr>
+          <tr>
+            <th>ユーザ名/ユーザid</th>
+            <td><%= User.find(@inquiry.user_id).name %>/<%= @inquiry.user_id %></td>
+          </tr>
+          <tr>
+            <th>件名</th>
+            <td><%= @inquiry.title %></td>
+          </tr>
+          <tr>
+            <th>お問い合わせ内容</th>
+            <td><%= @inquiry.body %></td>
+          </tr>
+          <tr>
+            <th>解決/未解決</th>
+            <td>
+              <div class="row form-group form-inline">
+                <%= f.radio_button :is_solved, true %>解決済み<label> </label><%= f.radio_button :is_solved, false %>未解決
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td><%= f.submit '変更する' %></td>
+          </tr>
+        </table>
+      <% end %>
+    </div>
+  </div>
+</div>

@@ -1,11 +1,11 @@
 <div class="container-fluid">
   <!-- フォローを促すモーダル -->
-  <div class="row follow-modal-area" data-panelist-ids= "<%= @panelist_ids %>">
+  <div class="row follow-modal-area" id="result-modal-area" data-panelist-ids=<%= @panelist_ids %> data-panelist-names=<%= @panelist_names %>>
     <div class="col-lg-10">
-      <%= render partial: 'public/question_rooms/follow_modal' %>
+      <%= render partial: 'public/question_rooms/finish_modal' %>
     </div>
   </div>
-  
+
   <div class="row">
     <div class="col-lg-10">
       <h1>対戦結果詳細</h1>
@@ -22,15 +22,17 @@
     </div>
     <div class="row">
       <div class="col-lg-10">
-        <% question_room.answers.each do |answer| %>
-          <div class="row">
-            <p class="col-lg-10"><%= answer.body %></p>
-            <div class="col-lg-2">
-              <%= image_tag 'heart.png' %>
-              <%= answer.total_nice_count %>
-            </div>
-          </div>
-        <% end %>
+        <table class="answer-table table">
+          <% question_room.answers.each do |answer| %>
+            <tr>
+              <td class="answer-table__answer"><%= answer.body %></td>
+              <td class="answer-table__nice"></td>
+              <td class="answer-table__total-nice-count">
+                <label><%= answer.total_nice_count %></label>
+              </td>
+            </tr>
+          <% end %>
+        </table>
       </div>
     </div>
   <% end %>

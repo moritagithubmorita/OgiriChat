@@ -1,0 +1,25 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-lg-10">
+      <h1>問い合わせ一覧</h1>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-10">
+      <table class="table">
+        <tr>
+          <th>問い合わせ日時</th>
+          <th>ユーザ名/id</th>
+          <th>件名</th>
+        </tr>
+        <% @inquiries.each do |inquiry| %>
+          <tr>
+            <td><%= l inquiry.created_at %></td>
+            <td><%= User.find(inquiry.user_id).name %>/<%= inquiry.user_id %></td>
+            <td><%= link_to inquiry.title, admin_inquiry_path(inquiry.id) %></td>
+          </tr>
+        <% end %>
+      </table>
+    </div>
+  </div>
+</div>

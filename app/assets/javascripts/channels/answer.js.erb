@@ -6,19 +6,18 @@
    2.対戦終了時間からのdelay
     FINISH_BATTLE_DELAY
 */
-var SET_DELAY = 2000
-var START_ANSWER_DELAY = 3000
-//var FINISH_ANSWER_DELAY = 123000
-var FINISH_ANSWER_DELAY = 30000
-var FINISH_BATTLE_DELAY = 2000
+let SET_DELAY = 2000
+let START_ANSWER_DELAY = 3000
+//let FINISH_ANSWER_DELAY = 123000
+let FINISH_ANSWER_DELAY = 5000 // 開発用
+let FINISH_BATTLE_DELAY = 2000
 
-var connected_channel_count = 0 // 接続済みチャンネル数
-var submit_is_active = false  //submit送信の有効/無効
-var enter_is_active = false //エンターキーの有効/無効
-var answerChannels = {} // チャンネルサブスクリプションs
-var current_ac_key = "qr1"  // 現在のお題に紐づいたAnswerChannelを指すキー(answerChannels)
-var qr_bodies = null  // QuestionRoomのお題s
-var qr_ids_answer = null; // 今回使うQuestionRoomのids
+let connected_channel_count = 0 // 接続済みチャンネル数
+let submit_is_active = false  //submit送信の有効/無効
+let answerChannels = {} // チャンネルサブスクリプションs
+let current_ac_key = "qr1"  // 現在のお題に紐づいたAnswerChannelを指すキー(answerChannels)
+let qr_bodies = null  // QuestionRoomのお題s
+let qr_ids_answer = null; // 今回使うQuestionRoomのids
 
 $(document).on('turbolinks:load', function(){
   qr_ids_answer = $('#question').data('question-room-ids'); // 今回使う問題のidを取得
@@ -50,13 +49,14 @@ $(document).on('turbolinks:load', function(){
 
       // 回答を受け取り表示(append())する
       received: function(data) {
-        return $('#answers').append(data['message'])
+        return $('#answers').prepend(data['message'])
       },
 
       // 回答
       // サーバーに回答を送信する
-      answer: function(answer) {
+      answer: function(qr_id, answer) {
         return this.perform('answer', {
+              qr_id: qr_id,
               answer: answer
             });
       },
@@ -105,9 +105,27 @@ function battle(cnt){
 
 // お題出題
 function set_question(question_room_body, delay){
+  /* 処理内容
+    1.現在のお題キー(qr_ids_answerにおける)を#questionのdata-current-qr-ids-answer-keyに保存
+    2.お題をセット、表示
+  */
   console.log("set_question()")
 
   setTimeout(function(){
+    // 現在のお題のキー(qr_ids_answer)を設定
+    let current_qr_ids_answer_key = $('#question').data('current-qr-ids-answer-key');
+    // 今回が第一問目の場合、先頭のお題を登録
+    if(current_qr_ids_answer_key == "start"){
+      $('#question').data('current-qr-ids-answer-key', "qr1_id");
+    }
+    // 今回が2問目以降である場合、次のお題のidを登録
+    else{
+      let str = current_qr_ids_answer_key.replace("qr", "");
+      str = str.replace("_id");
+      $('#question').data('current-qr-ids-answer-key', `qr${parseInt(str)+1}_id`)
+    }
+
+    // お題を表示
     $('#question').text(question_room_body)
     }
     , delay)
@@ -119,8 +137,6 @@ function prepare_answering(){
 
   // 送信ボタンを有効化
   enable_submit(true)
-  // エンターキーを有効化
-  enable_enter(true)
 }
 
 // 回答開始
@@ -153,17 +169,20 @@ function prepare_for_next(cnt){
   // cnt...現在の出題数
 
   /* 処理内容
-    1.enterとsubmitを無効化
+    1.submitを無効化
     2.フォームに入力中の内容を消す
-    3.お題を進める(current_ac_key処理)
+    3.回答を消す(表示を消す)
+    4.お題を進める(current_ac_key処理)
   */
 
-  // enterとsubmitを無効化
-  enable_enter(false)
+  // submitを無効化
   enable_submit(false)
 
   //フォームに入力中の内容を消す
   $('#answer-form').val("");
+
+  //表示されている回答を消す
+  $('.answer').remove();
 
   // current_ac_keyを進める
   current_ac_key = "qr"+(cnt+1)
@@ -186,31 +205,16 @@ function enable_submit(flag){
   $('#submit').toggleClass("submit--active")  // 色を変える
 }
 
-// エンターを有効化
-function enable_enter(flag){
-  enter_is_active = flag
-}
-
-// エンターが押されたらサーバに回答を送信する
-// enter_is_activeがfalseなら回答を送らない。
+// submitボタンが押されたらサーバに回答を送信する
+// submit_is_activeがfalseなら回答を送らない
 $(document).on('turbolinks:load', function(){
-  $(document).on('keydown', function(event) {
-    if ((event.keyCode === 13)&&(enter_is_active)) {
-      console.log("エンター検知＆送信")
-      answerChannels[current_ac_key].answer($('#answer-form').val());
-      $('#answer-form').val('');
-      return event.preventDefault();
-    }
-  });
-
-  // submitボタンが押されたらサーバに回答を送信する
-  // submit_is_activeがfalseなら回答を送らない
   $('#submit').on('click', function(event){
-    console.log("送信ボタンクリック")
-    if(submit_is_active){
-      console.log("送信")
-      answerChannels[current_ac_key].answer($('#answer-form').val());
-      $('#answer-form').val('');
+    if($('#answer-form').val()!=""){
+      if(submit_is_active){
+        let qr_ids_key = $('#question').data('current-qr-ids-answer-key')
+        answerChannels[current_ac_key].answer(qr_ids_answer[qr_ids_key], $('#answer-form').val());
+        $('#answer-form').val('');
+      }
     }
   });
 });

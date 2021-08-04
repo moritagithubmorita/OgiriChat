@@ -1,6 +1,6 @@
 <div class="container-fluid">
   <!-- フォローを促すモーダル -->
-  <div class="row follow-modal-area" data-panelist-ids= "<%= @panelist_ids %>">
+  <div class="row follow-modal-area" id="follow-modal-area" data-panelist-ids=<%= @panelist_ids %> data-panelist-names=<%= @panelist_names %>>
     <div class="col-lg-10">
       <%= render partial: 'public/question_rooms/finish_modal' %>
     </div>

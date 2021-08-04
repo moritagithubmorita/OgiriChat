@@ -1,6 +1,10 @@
-<div class="answer row d-flex justify-content-center" data-question-room-id="<%= question_room_id %>">
-  <p><%= answer %></p>
-  <label><%= current_user.name %></label>
-  <div class="answer__nice" data-answer-id="<%= answer_id %>"></div>
-  <label class="answer__total-nice-count" data-answer-id="<%= answer_id %>">0</label>
-</div>
+<tr class="answer row d-flex justify-content-center" data-question-room-id="<%= question_room_id %>">
+  <td class="col-lg-8"><p><%= answer %></p></td>
+  <td class="col-lg-2"><%= render partial: 'templates/user_name', locals: {user: user, url: ""} %></td>
+  <td class="col-lg-2">
+    <div class="row">
+      <div class="answer__nice d-inline col-lg-6" data-answer-id="<%= answer_id %>"></div>
+      <label class="answer__total-nice-count col-lg-6" data-answer-id-total="<%= answer_id %>">0</label>
+    </div>
+  </td>
+</tr>

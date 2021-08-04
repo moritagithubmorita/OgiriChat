@@ -95,30 +95,15 @@ class Public::QuestionRoomsController < ApplicationController
     # 1.自分以外のpanelistで、かつフォローしてないユーザのidを取得
     # 2.パネリストidを渡すための文字列を作成
 
-    @panelist_ids = {}
-
     # 参戦した自分以外のpanelistのうち、未フォローのユーザのみ取得
     @question_room_ids = {qr1_id: params[:qr1_id], qr2_id: params[:qr2_id], qr3_id: params[:qr3_id]}
-    panelists = QuestionRoom.find(@question_room_ids[:qr1_id]).panelists.where.not(user_id: current_user)
+    panelists = QuestionRoom.find(@question_room_ids[:qr1_id].to_i).panelists.where.not(user_id: current_user.id)
 
     # 文字列作成
-    panelist_ids = "{"
-    cnt = 1
-    panelists.each do |panelist|
-      # panelistをフォロー済みの場合はフォロー確認の対象から外す(ハッシュに加えない)
-      begin panelist.followers.find_by(follower_id: current_user.id)
-      # 未フォローの場合、フォロー確認の対象とする(ハッシュに加えビューに渡す)
-      rescue
-        panelist_ids += "\"panelist#{cnt}_id\":\"#{panelist.user_id}\""
-        cnt += 1
-        if cnt <= panelists.count
-          panelist_ids += ","
-        end
-        panelist_ids += "}"
+    strings = generate_panelist_ids_and_panelist_names_string(panelists)
 
-        @panelist_ids = panelist_ids
-      end
-    end
+    @panelist_ids = strings[:panelist_ids]
+    @panelist_names = strings[:panelist_names]
 
   end
 
@@ -130,24 +115,40 @@ class Public::QuestionRoomsController < ApplicationController
 
     panelists = @question_rooms.first.panelists.where.not(user_id: current_user)
 
+    strings = generate_panelist_ids_and_panelist_names_string(panelists)
+
+    @panelist_ids = strings[:panelist_ids]
+    @panelist_names = strings[:panelist_names]
+  end
+
+  private
+
+  # フォローモーダルのためのカスタムデータ属性用文字列を作成
+  # フォロー対象者がいなかった場合は"{}"を返す
+  def generate_panelist_ids_and_panelist_names_string(panelists)
     # 文字列作成
     panelist_ids = "{"
+    panelist_names = "{"
     cnt = 1
     panelists.each do |panelist|
       # panelistをフォロー済みの場合はフォロー確認の対象から外す(ハッシュに加えない)
-      begin panelist.followers.find_by(follower_id: current_user.id)
+      if User.find(panelist.user_id).followers.find_by(follower_id: current_user.id).nil?
       # 未フォローの場合、フォロー確認の対象とする(ハッシュに加えビューに渡す)
-      rescue
         panelist_ids += "\"panelist#{cnt}_id\":\"#{panelist.user_id}\""
+        panelist_names += "\"panelist#{cnt}_name\":\"#{User.find(panelist.user_id).name}\""
         cnt += 1
         if cnt <= panelists.count
           panelist_ids += ","
+          panelist_names += ","
         end
-        panelist_ids += "}"
-
-        @panelist_ids = panelist_ids
       end
     end
+    panelist_ids += "}"
+    panelist_names += "}"
+
+    product = {panelist_ids: panelist_ids, panelist_names: panelist_names}
+
+    return product
   end
 
 end

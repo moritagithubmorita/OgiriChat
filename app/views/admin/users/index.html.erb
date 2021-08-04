@@ -1,0 +1,25 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-lg-10">
+      <h1>ユーザー一覧</h1>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-10">
+      <table class="table">
+        <% @users.each do |user| %>
+          <tr>
+            <td><%= render partial: 'templates/user_name', locals: {user: user, url: admin_user_path(user.id)} %></td>
+            <td>
+              <% if user.is_active %>
+                <label>有効</label>
+              <% else %>
+                <label>退会済み</label>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </table>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,55 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-lg-10">
+      <h1><%= render partial: 'templates/user_name', locals: {user: @user, url: ""} %>さんの詳細</h1>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-10">
+      <table class="table">
+        <tr>
+          <th>名前</th>
+          <td><%= @user.name %></td>
+        </tr>
+        <tr>
+          <th>email</th>
+          <td><%= @user.email %></td>
+        </tr>
+        <tr>
+          <th>ランク</th>
+          <td><%= @user.rank_i18n %></td>
+        </tr>
+        <tr>
+          <th>獲得ナイス総数</th>
+          <td><%= @user.total_nice_count %>個</td>
+        </tr>
+        <tr>
+          <th>平均ナイス獲得数</th>
+          <td>
+            <% if @user.total_answer_count > 0 %>
+              <%= @user.total_nice_count/@user.total_answer_count %>
+            <% else %>
+              <%= 0 %>
+            <% end %>
+            <label>個</label>
+          </td>
+        </tr>
+        <tr>
+          <th>会員ステータス</th>
+          <td>
+            <% if @user.is_active %>
+              <label>有効</label>
+            <% else %>
+              <label>退会済み</label>
+            <% end %>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-3">
+      <%= link_to '変更する', edit_admin_user_path(@user.id) %>
+    </div>
+  </div>
+</div>
