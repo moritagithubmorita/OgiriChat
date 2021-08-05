@@ -60,15 +60,66 @@ class Public::QuestionRoomsController < ApplicationController
   end
 
   def battle
-    # 今回使用するお題ルームを3つ再度取得
-    qr1 = QuestionRoom.where(id: params[:qr1_id])
-    qr2 = QuestionRoom.where(id: params[:qr2_id])
-    qr3 = QuestionRoom.where(id: params[:qr3_id])
-    @question_rooms = qr1.or(qr2).or(qr3)
-
-    # 使用するお題(question_rooms)のroom_statusをrunningにする
-    @question_rooms.each do |question_room|
-      question_room.running!
+    # <基本処理>
+    # お題を取得し、room_statusをrunning(対戦中)に変更
+    # ログインユーザのフォロワーに参戦通知を送る(Noticeレコード作成)
+    # カスタムデータ属性(jsで使う)に渡す値を文字列で作成
+    # 
+    # <観覧時の処理>
+    # @処理概要
+    #   ・params[:qrs_id]がnilじゃなければ「観覧」であるとする。
+    #   ・その際params[:qrs_id]には"通知(notice)に含めた"or"ランダムに取得した"お題セットのidが入っている
+    # @処理の流れ
+    #   1.paramsで渡ってきたお題セットを取得し、@question_roomsに収納
+    #   2.参戦時に作成するdata用文字列(@qr_ids, @qr_bodies)に加え、観覧であることを示す@is_audience = trueを作る
+    
+    
+    # 参戦時の処理
+    if params[:qrs_id]==nil
+      # 今回使用するお題ルームを3つ再度取得
+      qr1 = QuestionRoom.where(id: params[:qr1_id])
+      qr2 = QuestionRoom.where(id: params[:qr2_id])
+      qr3 = QuestionRoom.where(id: params[:qr3_id])
+      @question_rooms = qr1.or(qr2).or(qr3)
+  
+      # 使用するお題(question_rooms)のroom_statusをrunningにする
+      @question_rooms.each do |question_room|
+        question_room.running!
+      end
+      
+      # 通知をフォロワーに送る
+      # お題セットの作成
+      question_room_set = QuestionRoomSet.new()
+      cnt = 1
+      @question_rooms.each do |question_room|
+        if cnt==1
+          question_room_set.question_room1_id=question_room.id
+        elsif cnt==2
+          question_room_set.question_room2_id=question_room.id
+        else
+          question_room_set.question_room3_id=question_room.id
+        end
+        cnt+=1
+      end
+      question_room_set.save
+      # 通知に含め、フォロワーに送る
+      current_user.followers.all.each do |follower|
+        notice = Notice.new(user_id: follower.id, follow_id: current_user.id, question_room_set_id: question_room_set.id)
+        notice.save
+      end
+      
+    # 観覧時の処理
+    else
+      # 今回使用するお題を取得
+      qrs = QuestionRoomSet.find(params[:qrs_id])
+      qr1 = QuestionRoom.where(id: qrs.question_room1_id)
+      qr2 = QuestionRoom.where(id: qrs.question_room2_id)
+      qr3 = QuestionRoom.where(id: qrs.question_room3_id)
+      @question_rooms = qr1.or(qr2).or(qr3)
+      
+      # @is_audienceを作成
+      # booleanのままで問題ないが、htmlでのdataの表記を揃えたいのであえて文字列にした
+      @is_audience = 'true'
     end
 
     # viewの「data-」属性に今回使うQuestionRoomのidを持たせるための文字列作成
@@ -94,6 +145,7 @@ class Public::QuestionRoomsController < ApplicationController
     # 処理内容
     # 1.自分以外のpanelistで、かつフォローしてないユーザのidを取得
     # 2.パネリストidを渡すための文字列を作成
+    # 3.観覧の場合、それを示す文字列を作成
 
     # 参戦した自分以外のpanelistのうち、未フォローのユーザのみ取得
     @question_room_ids = {qr1_id: params[:qr1_id], qr2_id: params[:qr2_id], qr3_id: params[:qr3_id]}
@@ -104,6 +156,13 @@ class Public::QuestionRoomsController < ApplicationController
 
     @panelist_ids = strings[:panelist_ids]
     @panelist_names = strings[:panelist_names]
+    
+    # 観覧の場合dataに渡す文字列を作成
+    if params[:is_audience]==true
+      @is_audience = "true"
+    else
+      @is_audience = "false"
+    end
 
   end
 

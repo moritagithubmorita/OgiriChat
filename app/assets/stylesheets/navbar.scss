@@ -6,10 +6,18 @@
     }
 
     &--unread{
-      color: red;
       text-shadow: 1px 0 5px black;
     }
-
+  }
+  
+  &__notice{
+    &--default{
+      
+    }
+    
+    &--unread{
+      text-shadow: 1px 0 5px;
+    }
   }
 
 }

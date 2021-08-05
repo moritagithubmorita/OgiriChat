@@ -5,6 +5,7 @@ class QuestionRoom < ApplicationRecord
   has_many :panelists
   has_many :answers
   has_many :notices
+  belongs_to :question_room_set
 
   enum room_status: {standby: 0, matching: 1, running: 2, finished: 3}
 

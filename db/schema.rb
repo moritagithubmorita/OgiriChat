@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_01_063502) do
+ActiveRecord::Schema.define(version: 2021_08_04_211843) do
 
   create_table "admins", force: :cascade do |t|
     t.string "email", default: "", null: false
@@ -61,7 +61,7 @@ ActiveRecord::Schema.define(version: 2021_08_01_063502) do
   create_table "notices", force: :cascade do |t|
     t.integer "user_id"
     t.integer "follow_id"
-    t.integer "question_room_id"
+    t.integer "question_room_set_id"
     t.boolean "is_readed"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -70,6 +70,14 @@ ActiveRecord::Schema.define(version: 2021_08_01_063502) do
   create_table "panelists", force: :cascade do |t|
     t.integer "question_room_id"
     t.integer "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "question_room_sets", force: :cascade do |t|
+    t.integer "question_room1_id"
+    t.integer "question_room2_id"
+    t.integer "question_room3_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

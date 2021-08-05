@@ -23,12 +23,24 @@ class AnswerChannel < ApplicationCable::Channel
     q.update(total_answer_count: q.total_answer_count+1)
 
     # ブロードキャスト
-    ActionCable.server.broadcast "answer_channel_#{data['qr_id']}", message: render_message(data['answer'], a.id, data['qr_id'])
+    ActionCable.server.broadcast "answer_channel_#{data['qr_id']}", message: render_message(a)
+  end
+  
+  # その時点までの回答を全てまとめてブロードキャストする
+  def get_all_answers(data)
+    qr_id = data['qr_id']
+    answers = QuestionRoom.find(qr_id).answers.all
+    ActionCable.server.broadcast "answer_channel_#{qr_id}", message: render_all_answers_message(answers)
   end
 
   # 回答テンプレートを返す
-  def render_message(answer, answer_id, qr_id)
-    return ApplicationController.renderer.render partial: 'public/question_rooms/answer', locals: {answer: answer, answer_id: answer_id, question_room_id: qr_id, user: current_user}
+  def render_message(answer)
+    return ApplicationController.renderer.render partial: 'public/question_rooms/answer', locals: {answer: answer, user: current_user}
+  end
+  
+  # 回答全てを外部テンプレートで返す
+  def render_all_answers_message(answers)
+    return ApplicationController.renderer.render partial: 'public/question_rooms/answer', collection: answers, as: answer, locals: {user: current_user}
   end
 
 end

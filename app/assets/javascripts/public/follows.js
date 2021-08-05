@@ -8,12 +8,10 @@
 
 // フォローモーダルに「対戦に参加したユーザ(未フォロー)のチェックボックス」を配置する
 $(document).on('turbolinks:load', function(){
-  var panelist_ids = $('.follow-modal-area').data('panelist-ids')
-  var panelist_names = $('.follow-modal-area').data('panelist-names')
+  var panelist_ids = $('.follow-modal-area').data('panelist-ids');  // 参戦者のうち未フォローのユーザのuser_ids
+  var panelist_names = $('.follow-modal-area').data('panelist-names');  // 上記に当てはまるユーザの名前s
+  
   // 未フォローユーザが参戦していた場合各ユーザのチェックボックスを表示
-
-  console.log(panelist_ids)
-
   if(panelist_ids != undefined){
     if(Object.keys(panelist_ids).length>0){
       var cnt = 1
