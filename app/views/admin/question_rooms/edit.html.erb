@@ -1,0 +1,34 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-lg-10">
+      <h1>お題編集</h1>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-10">
+      <%= form_with model: @question_room, url: "/admin/question_rooms/#{@question_room.id}", local: true do |f| %>
+        <div class="form-group row">
+          <label class="col-lg-3">お題</label>
+          <%= f.text_field :body, class:"col-lg-5" %>
+        </div>
+        <div class="form-group row form-inline">
+          <div class="col-lg-3">
+            <label class="d-block">お題ステータス</label>
+            <p>無効にすると対戦に使用されなくなります。</p>
+          </div>
+          <%= f.radio_button :is_active, true %>有効<label> </label><%= f.radio_button :is_active, false %>無効
+        </div>
+        <div class="form-group row form-inline">
+          <div class="col-lg-3">
+            <label class="d-block">出題ステータス</label>
+            <p>基本的に変更する必要はありません。出題済みにすると対戦に使用されなくなり、未出題にすると再び使用されるようになりますが、その場合それ以前の対戦での回答が残ったままになります。</p>
+          </div>
+          <%= f.radio_button :is_set, true %>出題済み<label> </label><%= f.radio_button :is_set, false, "data-confirm" => "本当に未出題にしますか？" %>未出題
+        </div>
+        <div class="row">
+          <%= f.submit '変更を保存' %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

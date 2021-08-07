@@ -1,0 +1,31 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-lg-10">
+      <h1>検索結果</h1>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-10">
+      <h2>ユーザー(<%= @users.count %>件)</h2>
+      <% @users.each do |user| %>
+        <div><%= link_to user.name, admin_user_path(user.id) %></div>
+      <% end %>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-10">
+      <h2>お題(<%= @question_rooms.count %>件)</h2>
+      <% @question_rooms.each do |question_room| %>
+        <div><%= link_to question_room.body, admin_question_room_path(question_room.id) %></div>
+      <% end %>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-10">
+      <h2>回答(<%= @answers.count %>件)</h2>
+        <% @answers.each do |answer| %>
+        <div><%= link_to answer.body, admin_question_room_path(answer.question_room_id) %></div>
+      <% end %>
+    </div>
+  </div>
+</div>

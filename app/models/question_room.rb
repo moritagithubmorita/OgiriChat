@@ -4,8 +4,6 @@ class QuestionRoom < ApplicationRecord
   belongs_to :admin, foreign_key: :added_by
   has_many :panelists
   has_many :answers
-  has_many :notices
-  belongs_to :question_room_set
 
   enum room_status: {standby: 0, matching: 1, running: 2, finished: 3}
 
@@ -15,6 +13,7 @@ class QuestionRoom < ApplicationRecord
   attribute :is_active, :boolean, default: true
   attribute :is_set, :boolean, default: false
   attribute :room_status, :integer, default: :standby
+  attribute :question_room_set_id, :integer, default: -1
 
   validates :body, :added_by, presence: true
 

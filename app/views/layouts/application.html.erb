@@ -54,9 +54,9 @@
                   <!--管理者ログイン時-->
                   <% else %>
                     <li class="nav-item">
-                      <%= form_tag(admin_homes_search_path, method: :get) do %>
-                        <%= text_field_tag :search %>
-                        <%= submit_tag '検索', name: :nil %>
+                      <%= form_with url: admin_homes_search_path, method: :post, local: true do |f| %>
+                        <%= f.text_field :search %>
+                        <%= f.submit '検索' %>
                       <% end %>
                     </li>
                     <li class="nav-item">

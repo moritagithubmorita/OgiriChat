@@ -1,0 +1,22 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-lg-3"></div>
+    <div class="col-lg-6">
+      <h1>お題一覧</h1>
+    </div>
+    <div class="col-lg-3">
+      <h2><%= link_to '＋', new_admin_question_room_path %></h2>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-8">
+      <table class="table">
+        <% @question_rooms.each do |qr| %>
+          <tr>
+            <%= link_to qr.body, admin_question_room_path(qr.id) %>
+          </tr>
+        <% end %>
+      </table>
+    </div>
+  </div>
+</div>

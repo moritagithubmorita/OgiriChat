@@ -1,16 +1,27 @@
 <div class="container-fluid">
+  <%= render partial: 'templates/error', locals: {model: @notice} %>
+  <!-- 観覧でお題取得失敗の場合、ホームへ戻るボタンを表示する -->
+  <% if @question_rooms.nil? %>
   <div class="row">
-    <div class="col-lg-10 mx-auto justify-content-center">
-      <h1>お題</h1>
-      <p id="question" data-question-room-ids=<%= @qr_ids %> data-question-room-bodies=<%= @qr_bodies %> data-current-qr-ids-answer-key="start" data-is-audience=<%= @is_audience %>></p>
+    <div class="col-lg-10">
+      <p>対戦中の部屋が見つかりませんでした。トップ画面へ戻ります。</p>
+      <%= link_to 'トップへ戻る', root_path %>
     </div>
   </div>
-  <div class="row">
-    <%= text_area_tag :answer, "", {id:"answer-form", autofocus: true} %>
-    <button id="submit">回答！</button>
-  </div>
-  <div class="row">
-    <table class="col-lg-10 mx-auto answer-table table" id="answers">
-    </table>
-  </div>
+  <% else %>
+    <div class="row">
+      <div class="col-lg-10 mx-auto justify-content-center">
+        <h1>お題</h1>
+        <p id="question" data-question-room-ids=<%= @qr_ids %> data-question-room-bodies=<%= @qr_bodies %> data-current-qr-ids-answer-key="start" data-is-audience=<%= @is_audience %> data-start-time=<%= @start_time %>></p>
+      </div>
+    </div>
+    <div class="row">
+      <%= text_area_tag :answer, "", {id:"answer-form", autofocus: true} %>
+      <button id="submit">回答！</button>
+    </div>
+    <div class="row">
+      <table class="col-lg-10 mx-auto answer-table table" id="answers">
+      </table>
+    </div>
+  <% end %>
 </div>

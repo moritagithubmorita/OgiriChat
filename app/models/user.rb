@@ -1,4 +1,6 @@
 class User < ApplicationRecord
+  RANKUP_NICE_BORDER = 50 # ランクアップに必要なniceの数(全ランク)
+  
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
@@ -17,6 +19,7 @@ class User < ApplicationRecord
   attribute :total_answer_count, :integer, default: 0
   attribute :star_count, :integer, default: 0
   attribute :rank, :integer, default: :fledgling
+  attribute :rankup_nice_count, :integer, default: 0
 
   validates :name, presence: true
 

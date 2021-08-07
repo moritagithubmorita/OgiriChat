@@ -16,7 +16,7 @@
 let SET_DELAY = 2000
 let START_ANSWER_DELAY = 3000
 //let FINISH_ANSWER_DELAY = 123000
-let FINISH_ANSWER_DELAY = 5000 // 開発用
+let FINISH_ANSWER_DELAY = 10000 // 開発用
 let FINISH_BATTLE_DELAY = 2000
 
 let connected_channel_count = 0 // 接続済みチャンネル数
@@ -26,7 +26,6 @@ let current_ac_key = "qr1"  // 現在のお題に紐づいたAnswerChannelを指
 let qr_bodies = null  // QuestionRoomのお題s
 let qr_ids_answer = null; // 今回使うQuestionRoomのids
 let is_audience = undefined;  //観覧ならtrue/参戦ならfalseを後で代入する
-let start_time = null;  // 開始時間
 
 $(document).on('turbolinks:load', function(){
   qr_ids_answer = $('#question').data('question-room-ids'); // 今回使う問題のidを取得
@@ -78,7 +77,7 @@ $(document).on('turbolinks:load', function(){
               answer: answer
             });
       },
-      
+
       // その時点までの回答を全取得(戻り値:部分テンプレート)
       get_all_answers: function(qr_id){
         return this.perform('get_all_answers', {
@@ -94,16 +93,12 @@ $(document).on('turbolinks:load', function(){
 // 対戦を管理する(参戦用)
 function battle_manager(){
   /* 処理内容
-    1.開始時間を保存する(観覧処理に使う)
-    2.各問題をスケジューリングする
+    1.各問題をスケジューリングする
       ※setIntervalは使用せず、1回のeachで全ての問題に関するスケジューリングをしてしまう
-    3.対戦終了をスケジューリング
+    2.対戦終了をスケジューリング
   */
 
   console.log('対戦スタート')
-
-  // 開始時間を保存
-  start_time = new Date()
 
   // 対戦をスケジューリング
   // 1問目の準備〜3問目の終了処理までのスケジューリング
@@ -130,8 +125,9 @@ function battle_manager_audience(){
   */
 
   // 1.経過時間計算
+  var start_time = $('#question').data('start-time'); // 開始時間を文字列で取得[ミリ秒]
   var current_time = new Date();
-  var elapsed_time = current_time.getTime() - start_time.getTime(); //[ミリ秒]
+  var elapsed_time = current_time.getTime() - start_time; //[ミリ秒]
 
   // 2.対戦スケジューリング(および3.観覧開始までの投稿を全表示)
   var cnt = 1;  // 何問目か

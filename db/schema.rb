@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_04_211843) do
+ActiveRecord::Schema.define(version: 2021_08_07_123812) do
 
   create_table "admins", force: :cascade do |t|
     t.string "email", default: "", null: false
@@ -93,6 +93,7 @@ ActiveRecord::Schema.define(version: 2021_08_04_211843) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "room_status"
+    t.integer "question_room_set_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -109,6 +110,7 @@ ActiveRecord::Schema.define(version: 2021_08_04_211843) do
     t.integer "total_answer_count"
     t.integer "rank"
     t.integer "star_count"
+    t.integer "rankup_nice_count"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end

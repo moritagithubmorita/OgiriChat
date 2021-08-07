@@ -2,6 +2,8 @@ ja:
   time:
     formats:
       default: "%Y/%m/%d %H:%M:%S"
+      japan: "%Y年%m月%d日 %H:%M:%S"
+      hyphen: "%Y-%m-%d-%H-%M-%S"
   enums:
     question_room:
       room_status:

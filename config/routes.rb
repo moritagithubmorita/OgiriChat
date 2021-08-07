@@ -31,9 +31,9 @@ Rails.application.routes.draw do
 
   namespace :admin do
     get '/homes/top' => 'homes#top'
-    get '/homes/search' => 'homes#search'
+    post '/homes/search' => 'homes#search'
     resources :users, only: [:edit, :update, :index, :show]
-    resources :question_rooms
+    resources :question_rooms, except: [:destroy]
     resources :inquiries, only: [:update, :index, :show, :edit]
   end
 

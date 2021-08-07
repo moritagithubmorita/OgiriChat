@@ -1,4 +1,11 @@
 <div class="container">
+  <!-- ランクアップモーダル-->
+  <div class="row" id="rankup-modal__area" data-rankup=<%= @rankup %>>
+    <div class="col-lg-10">
+      <%= render partial: "public/homes/rankup_modal" 
+    </div>
+  </div>
+  
   <div class="row">
     <div class="col-lg-10 mx-auto d-flex justify-content-center">
       <%= link_to match_make_path, class:"match-make-link", id:"match_make_link" do %>
@@ -10,11 +17,7 @@
   </div>
   <div class="row">
     <div class=" col-lg-10 mx-auto d-flex justify-content-center">
-      <%= link_to battle_path(is_watcher: true) do %>
-        <div class="watcher-link">
-          <h1 class="watcher-link__text">観覧する</h1>
-        </div>
-      <% end %>
+      <%= link_to '観覧する', battle_path(is_audience: true, from_top: true) %>
     </div>
   </div>
   <%= link_to '対戦画面へ(開発者モード)', battle_path(qr1_id: 1, qr2_id: 2, qr3_id:3) %>

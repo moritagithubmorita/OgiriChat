@@ -1,0 +1,31 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-lg-10">
+      <h1>お題一覧画面</h1>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-8">
+      <table class="table">
+        <tr>
+          <th>お題</th>
+          <th>作成者</th>
+          <th>作成日</th>
+          <th>回答者1</th>
+          <th>回答者2</th>
+        </tr>
+      <% @question_rooms.each do |qr| %>
+        <tr>
+          <td><%= link_to qr.body, admin_question_room_path(qr.id) %></td>
+          <td><%= Admin.find(qr.added_by).name %></td>
+          <td><%= l qr.created_at, format: :japan %></td>
+          <% panelists = qr.panelists.all %>
+          <% panelists.each do |panelist| %>
+            <td><%= User.find(panelist.user_id).name %></td>
+          <% end %>
+        </tr>
+      <% end %>
+      </table>
+    </div>
+  </div>
+</div>

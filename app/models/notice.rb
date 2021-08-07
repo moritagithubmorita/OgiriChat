@@ -1,5 +1,4 @@
 class Notice < ApplicationRecord
-  belongs_to :question_room
   belongs_to :user
   belongs_to :question_room_set
 

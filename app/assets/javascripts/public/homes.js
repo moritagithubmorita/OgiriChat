@@ -1,4 +1,9 @@
-// # Place all the behaviors and hooks related to the matching controller here.
-// # All this logic will automatically be available in application.js.
-// # You can use CoffeeScript in this file: http://coffeescript.org/
-// 
+/*global $*/
+
+$(document).on('turbolinks:load', function(){
+  let is_rankup = $('#rankup-modal__area').data('rankup');
+  
+  if(is_rankup){
+    
+  }
+});

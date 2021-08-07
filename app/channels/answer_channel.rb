@@ -21,6 +21,9 @@ class AnswerChannel < ApplicationCable::Channel
     # 紐づくQuestionRoomを更新
     q = QuestionRoom.find(data['qr_id'])
     q.update(total_answer_count: q.total_answer_count+1)
+    
+    # ログインユーザを更新
+    current_user.update(total_answer_count: current_user.total_answer_count+1)
 
     # ブロードキャスト
     ActionCable.server.broadcast "answer_channel_#{data['qr_id']}", message: render_message(a)

@@ -6,9 +6,9 @@
         <% @notices.each do |notice| %>
           <tr>
             <td>
-              <% if QuestionRoom.find(notice.question_room1_id).running? %>
-                <%= link_to "#{User.find(notice.follow_id).name}が対戦を開始しました(対戦中)。", battle_path(qrs_id: notice.question_room_set_id) %>
-              <% elsif QuestionRoom.find(notice.question_room1_id).finished? %>
+              <% if QuestionRoom.find(QuestionRoomSet.find(notice.question_room_set_id).question_room1_id).running? %>
+                <%= link_to "#{User.find(notice.follow_id).name}が対戦を開始しました(対戦中)。", battle_path(qrs_id: notice.question_room_set_id, is_audience: true) %>
+              <% elsif QuestionRoom.find(QuestionRoomSet.find(notice.question_room_set_id).question_room1_id).finished? %>
                 <label><%= User.find(notice.follow_id).name %>が対戦を開始しました(終了済)。</label>
               <% end %>
             </td>

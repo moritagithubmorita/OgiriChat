@@ -17,7 +17,7 @@
         </tr>
         <tr>
           <th>作成日/更新日</th>
-          <td><p><%= l @question_room.created_at %> / <%= l @question_room.updated_at %></p></td>
+          <td><p><%= l @question_room.created_at, format: :japan %> / <%= l @question_room.updated_at, format: :japan %></p></td>
         </tr>
         <tr>
           <th>お題ステータス</th>
@@ -51,6 +51,32 @@
           <% end %>
         <% end %>
       </table>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-8">
+      <h2>回答一覧</h2>
+      <% if @question_room.answers.count == 0 %>
+        <p>回答はまだありません。</p>
+      <% else %>
+        <table class="table">
+          <tr>
+            <th>回答</th>
+            <th>回答者</th>
+          </tr>
+          <% @question_room.answers.all.each do |answer| %>
+            <tr>
+              <td><div><%= answer.body %></div></td>
+              <td><div><%= User.find(answer.user_id).name %></div></td>
+            </tr>
+          <% end %>
+        </table>
+      <% end %>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-10">
+      <div><%= link_to '編集する', edit_admin_question_room_path(@question_room.id) %></div>
     </div>
   </div>
 </div>
