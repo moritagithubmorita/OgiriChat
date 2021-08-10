@@ -23,7 +23,7 @@ class QuestionRoom < ApplicationRecord
     self.update(is_active: true, is_set: false, room_status: :standby)
     # 紐づくPanelistを削除
     panelists = Panelist.where(question_room_id: self.id)
-    if panelsits.count != 0
+    if panelists.count != 0
       panelists.each do |panelist|
         panelist.destroy()
       end

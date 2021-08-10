@@ -1,5 +1,6 @@
 class User < ApplicationRecord
   RANKUP_NICE_BORDER = 50 # ランクアップに必要なniceの数(全ランク)
+  MAX_STAR_COUNT = 5 # 「名前の横に星を表示するまでに必要なベテラン→マスターの辞退回数」の
   
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable

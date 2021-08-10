@@ -12,11 +12,13 @@ Rails.application.routes.draw do
 
   root to: "public/homes#top"
   get "homes/stand_by" => 'public/homes#stand_by', as: 'stand_by'
+  get "homes/rankup" => 'public/homes#rankup', as: 'rankup'
 
   get "question_rooms/match_make" => 'public/question_rooms#match_make', as: 'match_make'
   get "question_rooms/battle" => 'public/question_rooms#battle', as: 'battle'
   get "question_rooms/finish" => 'public/question_rooms#finish', as: 'finish'
   get "question_rooms/result" => 'public/question_rooms#result', as: 'result'
+  get "question_rooms/get_all_answers_of" => 'public/question_rooms#get_all_answers_of', as: 'get_all_answers_of'
 
   get "users/confirm" => 'public/users#confirm', as: 'confirm'
   patch "users/withdraw" => 'public/users#withdraw', as: 'withdraw'

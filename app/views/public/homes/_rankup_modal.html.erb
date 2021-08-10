@@ -1,6 +1,24 @@
-<div class="row">
-  <div class="col-lg-10">
-    <h1>ランクアップ!</h1>
+<!-- ランクアップモーダル -->
 
+<div class="rankup-modal">
+  <div class="rankup-modal__contents-area">
+    <h1>ランクアップ!</h1>
+    <% if user.rank_before_type_cast < User.ranks[:veteran] %>
+      <p>
+        <%= user.rank_i18n %> → <%= I18n.t("enums.user.rank.#{User.ranks.key(user.rank_before_type_cast+1)}") %>
+      </p>
+      <button class = "rankup-modal__ok-button">やったね!</button>
+    <% elsif user.rank_before_type_cast == User.ranks[:veteran] %>
+      <p>
+        <%= user.rank_i18n %> → <%= I18n.t("enums.user.rank.#{User.ranks.key(user.rank_before_type_cast+1)}") %>
+      </p>
+      <button class = "rankup-modal__ok-button">ランクアップする</button>
+      <button class = "rankup-modal__decline-button">辞退する</button>
+    <% else %>
+      <p>
+        異常な処理です。
+      </p>
+      <button class = "rankup-modal__decline-button">モーダルを消す</button>
+    <% end %>
   </div>
 </div>
