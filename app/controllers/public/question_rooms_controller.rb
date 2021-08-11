@@ -1,5 +1,13 @@
 class Public::QuestionRoomsController < ApplicationController
-  skip_before_action :redirected_from_match_make?, only: :battle
+  # skip_before_action :redirected_from_match_make?, only: :battle
+
+  before_action :signed_in_check
+
+  def signed_in_check
+    if !user_signed_in?
+      redirect_to new_user_session_path
+    end
+  end
 
   EPOCH = "1970-1-1-0-0-0"  # エポック(UTC)
 
@@ -8,47 +16,49 @@ class Public::QuestionRoomsController < ApplicationController
     # 処理の流れ
     # 1. 対戦に使うQuestionRoomを3つ取得する。マッチング中>待機中の順に優先して取得する。
     #     -> もし3つ取得できなかったときは「準備中画面」に遷移する。
-    # 2. 取得した全ての部屋のroom_statusをmatchingにする
+    # 2. 取得した全ての部屋のroom_statusをmatching、is_setをtrueにする
     # 3. その部屋にすでに他の入室者がいた場合それを取得
     # 4. users取得"後"、QuestionRoom(お題)に紐づくPanelist(回答者)をそれぞれに対し1つずつ作成。
     # 5. サブスクライブ時に使用するroom_idをhtmlのdata-属性に渡すための文字列を作成
 
-    question_rooms = QuestionRoom.where(room_status: :matching, is_active: true,).limit(3)  # マッチング中の部屋を探す
-    room_count = question_rooms.count
+    @question_rooms = QuestionRoom.where(room_status: :matching, is_active: true).limit(3)  # マッチング中の部屋を探す
+    room_count = @question_rooms.count
     # 発見した部屋の数が3部屋未満の場合、改めてstandbyを3部屋取得し直す
     if room_count < 3
-      question_rooms = QuestionRoom.where(room_status: :standby, is_active: true).limit(3) # 待機中の部屋を探す
-      room_count = question_rooms.count #今回発見した部屋の数
+      @question_rooms = QuestionRoom.where(room_status: :standby, is_active: true).limit(3) # 待機中の部屋を探す
+      room_count = @question_rooms.count #今回発見した部屋の数
     end
     # 部屋を3部屋取得できなかった場合、準備中画面に遷移
     if room_count != 3
       redirect_to stand_by_path
+      return
     end
 
-    # room_statusをmatchingにする
-    question_rooms.each do |question_room|
+    # room_statusをmatching、is_setをtrueにする
+    @question_rooms.each do |question_room|
       question_room.matching!
+      question_room.update(is_set: true)
     end
 
     # 先に入室しているユーザを取得。1つのデータを取得するだけなのだが、viewでcountを使いたいのでwhereで取得する
     begin
-      @users = User.where(id: Panelist.find_by(question_room_id: question_rooms.first.id).user_id)
+      @users = User.where(id: Panelist.find_by(question_room_id: @question_rooms.first.id).user_id)
     rescue
       @users = User.where(id: -1)  # count==0のための処理。からのRelationを取得(count==0)
     end
 
     #Panelistレコードを生成、dbに保存
-    question_rooms.each do |question_room|
+    @question_rooms.each do |question_room|
       Panelist.create(question_room_id: question_room.id, user_id: current_user.id)
     end
 
     # viewの「data-」属性に今回使うQuestionRoomのidを持たせるための文字列作成
     count = 1
     qr_ids = "{"
-    question_rooms.each do |question_room|
+    @question_rooms.each do |question_room|
       qr_ids += "\"qr#{count}_id\":\"#{question_room.id}\""
       count += 1
-      if count <= question_rooms.count
+      if count <= room_count
         qr_ids += ","
       end
     end
@@ -116,7 +126,7 @@ class Public::QuestionRoomsController < ApplicationController
         qrs_id = get_question_room_set
         # 取得できなかった場合無効な値をビューに送る
         if qrs_id == -1
-          @question_rooms=nil
+          @is_failure = true
           @is_audience="true"
           @start_time="{\"start_time\":\"-1\"}"
           return
@@ -127,7 +137,8 @@ class Public::QuestionRoomsController < ApplicationController
       elsif !params[:from_notice].nil?
         qrs = QuestionRoomSet.find(params[:qrs_id])
       end
-      @question_rooms = QuestionRoom.where(id: qrs.question_room1_id).or(QuestionRoom.where(id: qrs.question_room2_id)).or(QuestionRoom.where(id: qrs.question_room3_id))
+
+      @is_failure=false
 
       # @is_audienceを作成
       # booleanのままで問題ないが、htmlでのdataの表記を揃えたいのであえて文字列にした
@@ -164,9 +175,15 @@ class Public::QuestionRoomsController < ApplicationController
 
   def finish
     # 処理内容
-    # 1.自分以外のpanelistで、かつフォローしてないユーザのidを取得
-    # 2.パネリストidを渡すための文字列を作成
-    # 3.観覧の場合、それを示す文字列を作成
+    # 1.使用したQuestionRoomのroom_statusをfinishedにする
+    # 2.自分以外のpanelistで、かつフォローしてないユーザのidを取得
+    # 3.パネリストidを渡すための文字列を作成
+    # 4.観覧の場合、それを示す文字列を作成
+
+    # 使用したお題をfinishedにする
+    QuestionRoom.find(params[:qr1_id]).finished!
+    QuestionRoom.find(params[:qr2_id]).finished!
+    QuestionRoom.find(params[:qr3_id]).finished!
 
     # 参戦した自分以外のpanelistのうち、未フォローのユーザのみ取得
     @question_room_ids = {qr1_id: params[:qr1_id], qr2_id: params[:qr2_id], qr3_id: params[:qr3_id]}

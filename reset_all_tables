@@ -1,0 +1,16 @@
+
+[1mFrom:[0m /home/ec2-user/environment/OgiriChat/app/controllers/public/homes_controller.rb:12 Public::HomesController#top:
+
+     [1;34m3[0m: [32mdef[0m [1;34mtop[0m
+     [1;34m4[0m:   [1;34m# 対戦終了画面or対戦詳細画面からトップに戻ってきた場合、ランクアップ表示をする[0m
+     [1;34m5[0m:   [1;34m# ランクアップは50ナイスごとに行われる。[0m
+     [1;34m6[0m:   [32mif[0m params[[33m:from_follow_modal[0m]==[31m[1;31m"[0m[31mtrue[1;31m"[0m[31m[0m
+     [1;34m7[0m:     [32mif[0m current_user && current_user.rankup_nice_count > [1;34;4mUser[0m::[1;34;4mRANKUP_NICE_BORDER[0m
+     [1;34m8[0m:       @rankup = [31m[1;31m"[0m[31mtrue[1;31m"[0m[31m[0m
+     [1;34m9[0m:     [32mend[0m
+    [1;34m10[0m:   [32mend[0m
+    [1;34m11[0m: 
+ => [1;34m12[0m:   binding.pry
+    [1;34m13[0m: 
+    [1;34m14[0m: [32mend[0m
+

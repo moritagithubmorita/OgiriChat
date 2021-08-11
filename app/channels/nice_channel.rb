@@ -14,17 +14,18 @@ class NiceChannel < ApplicationCable::Channel
   def nice(data)
     a = Answer.find(data['answer_id'])
     q= QuestionRoom.find(data['question_room_id'])
+    u = User.find(a.user_id)
 
     # ナイスが押された場合AnswerとQuestionRoomとログインユーザそれぞれのtotal_nice_countを+1
     if data['is_plus']
       a.update(total_nice_count: a.total_nice_count+1)
       q.update(total_nice_count: q.total_nice_count+1)
-      current_user.update(total_nice_count: current_user.total_nice_count+1)
+      u.update(total_nice_count: u.total_nice_count+1, rankup_nice_count: u.rankup_nice_count+1)
     # ナイスが取り消された場合同じものを-1
     else
       a.update(total_nice_count: a.total_nice_count-1)
       q.update(total_nice_count: q.total_nice_count-1)
-      current_user.update(total_nice_count: current_user.total_nice_count-1)
+      u.update(total_nice_count: u.total_nice_count-1, rankup_nice_count: u.rankup_nice_count-1)
     end
     # ブロードキャスト
     ActionCable.server.broadcast "nice_channel", answer_id: data['answer_id'], total_nice_count: a.total_nice_count

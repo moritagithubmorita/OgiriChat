@@ -20,6 +20,10 @@
           <td><%= @user.rank_i18n %></td>
         </tr>
         <tr>
+          <th>回答総数</th>
+          <td><%= @user.total_answer_count %>個</td>
+        </tr>
+        <tr>
           <th>獲得ナイス総数</th>
           <td><%= @user.total_nice_count %>個</td>
         </tr>
@@ -27,7 +31,7 @@
           <th>平均ナイス獲得数</th>
           <td>
             <% if @user.total_answer_count > 0 %>
-              <%= @user.total_nice_count/@user.total_answer_count %>
+              <%= (@user.total_nice_count.fdiv(@user.total_answer_count)).floor(2) %>
             <% else %>
               <%= 0 %>
             <% end %>

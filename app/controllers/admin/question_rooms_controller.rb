@@ -1,4 +1,11 @@
 class Admin::QuestionRoomsController < ApplicationController
+  before_action :signed_in_check
+  
+  def signed_in_check
+    if !admin_signed_in?
+      redirect_to new_admin_session_path
+    end
+  end
 
   def new
     @question_room = QuestionRoom.new()

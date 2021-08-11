@@ -13,7 +13,7 @@ class Public::FollowsController < ApplicationController
       Follower.create(user_id: params[:user1_id].to_i, follower_id: current_user.id)
     end
 
-    redirect_to root_path
+    redirect_to root_path(from_follow_modal: true)
   end
 
   # フォロー済みユーザをフォロー解除/再フォローする(マイページ用の関数)

@@ -45,7 +45,7 @@
           <% panelists.each do |panelist| %>
             <tr>
               <th><label>参加者<%= "#{count}" %></label></th>
-              <td><%= render partial: 'templates/user_name', locals: {user: User.find(panelist.user_id)} %></td>
+              <td><%= render partial: 'templates/user_name', locals: {user: User.find(panelist.user_id), url: ""} %></td>
             </tr>
             <% count += 1 %>
           <% end %>

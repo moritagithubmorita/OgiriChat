@@ -2,6 +2,22 @@
 
 class Admin::SessionsController < Devise::SessionsController
   # before_action :configure_sign_in_params, only: [:create]
+  before_action :user_signed_in_check, only: [:create]
+
+  # ユーザと管理者の同時ログインを禁止する
+  def user_signed_in_check
+    if user_signed_in?
+      reset_session
+    end
+  end
+
+  def after_sign_in_path_for(resource)
+    admin_homes_top_path
+  end
+
+  def after_sign_out_path_for(resource)
+    admin_homes_top_path
+  end
 
   # GET /resource/sign_in
   # def new

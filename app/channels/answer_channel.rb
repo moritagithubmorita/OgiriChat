@@ -11,7 +11,7 @@ class AnswerChannel < ApplicationCable::Channel
   def answer(data)
     # 処理内容
     # 1.Answerインスタンス作成、データベースに保存
-    # 2.紐づくQuestionRoomを更新
+    # 2.紐づくQuestionRoom、current_userを更新
     # 3.回答をブロードキャスト
 
     # 回答をデータベースに保存
@@ -23,22 +23,17 @@ class AnswerChannel < ApplicationCable::Channel
     q.update(total_answer_count: q.total_answer_count+1)
 
     # ログインユーザを更新
-    current_user.update(total_answer_count: current_user.total_answer_count+1)
+    if !(current_user.update(total_answer_count: current_user.total_answer_count+1))
+      p "*************total_answer_countインクリメントシっぱい******************"
+    end
 
     # ブロードキャスト
     ActionCable.server.broadcast "answer_channel_#{data['qr_id']}", message: render_message(a)
   end
 
-  # その時点までの回答を全てまとめてブロードキャストする
-  def get_all_answers(data)
-    qr_id = data['qr_id']
-    answers = QuestionRoom.find(qr_id).answers.all
-    ActionCable.server.broadcast "answer_channel_#{qr_id}", message: render_all_answers_message(answers)
-  end
-
   # 回答テンプレートを返す
   def render_message(answer)
-    return ApplicationController.renderer.render partial: 'public/question_rooms/answer', locals: {answer: answer, user: current_user}
+    return ApplicationController.renderer.render partial: 'public/question_rooms/answer', locals: {answer: answer}
   end
 
 end

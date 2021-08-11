@@ -27,6 +27,7 @@ let current_ac_key = "qr1"  // 現在のお題に紐づいたAnswerChannelを指
 let qr_bodies = null  // QuestionRoomのお題s
 let qr_ids_answer = null; // 今回使うQuestionRoomのids
 let is_audience = undefined;  //観覧ならtrue/参戦ならfalseを後で代入する
+let timeoutArray = [];  // setTimeoutを画面遷移時にクリアするための配列。turbolinksではsetTimeoutが破棄されない。
 
 $(document).on('turbolinks:load', function(){
   qr_ids_answer = $('#question').data('question-room-ids'); // 今回使う問題のidを取得
@@ -241,7 +242,7 @@ function set_question(question_room_body, delay, cnt){
   */
   console.log("set_question()")
 
-  setTimeout(function(){
+  timeoutArray.push(setTimeout(function(){
     // 現在のお題のキー(qr_ids_answer)を設定
     let current_qr_ids_answer_key = $('#question').data('current-qr-ids-answer-key');
     console.log(`current_qr_ids_answer_key: ${current_qr_ids_answer_key}`);
@@ -260,7 +261,7 @@ function set_question(question_room_body, delay, cnt){
     // お題を表示
     $('#question').text(question_room_body)
     }
-    , delay)
+    , delay));
 }
 
 // 観覧、即時実行用set_question
@@ -305,22 +306,22 @@ function start_answering(delay){
   console.log('start_answering()')
 
   // 回答準備
-  setTimeout(function(){
+  timeoutArray.push(setTimeout(function(){
     prepare_answering()
   }
-  ,delay)
+  ,delay));
 }
 
 // 回答終了
 function finish_answering(delay, cnt){
   console.log('finish_answering()')
 
-  setTimeout(function(){
+  timeoutArray.push(setTimeout(function(){
     $('#question').text('終了！');
     // 次のお題の準備
     prepare_for_next(cnt);
   }
-  ,delay)
+  ,delay));
 }
 
 // 終了処理、次のお題の準備
@@ -354,11 +355,11 @@ function prepare_for_next(cnt){
 function finish_battle(delay){
   console.log('finish_battle()')
 
-  setTimeout(function(){
+  timeoutArray.push(setTimeout(function(){
     // ねぎらいページへ遷移
     console.log('finish_battle');
     window.location.href = `<%= Rails.application.routes.url_helpers.finish_path %>?qr1_id=${qr_ids_answer.qr1_id}&qr2_id=${qr_ids_answer.qr2_id}&qr3_id=${qr_ids_answer.qr3_id}&is_audience=${is_audience}`
-  }, delay)
+  }, delay));
 }
 
 // submitボタンを有効/無効
@@ -380,3 +381,10 @@ $(document).on('turbolinks:load', function(){
     }
   });
 });
+
+// ページ遷移したらsetTimeoutを破棄する
+$(document).on('page:change', function(){
+  $.each(timeoutArray, function(index, value){
+    clearTimeout(value);
+  });
+})

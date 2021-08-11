@@ -1,4 +1,12 @@
 class Public::UsersController < ApplicationController
+  before_action :signed_in_check
+
+  def signed_in_check
+    if !user_signed_in?
+      redirect_to new_user_session_path
+    end
+  end
+
   def show
     @user = current_user
 

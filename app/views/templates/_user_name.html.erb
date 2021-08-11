@@ -1,12 +1,12 @@
-<div>
-  <h2>
+<div class="user-name d-flex">
+  <label class="user-name__name">
     <% if url=="" %>
       <%= user.name %>
     <% else %>
       <%= link_to user.name, url %>
     <% end %>
-    <% if user.star_count == 5 %>
-      <%= image_tag 'star.png' %>
-    <% end %>
-  </h2>
+  </label>
+  <% if user.star_count >= 5 %>
+      <div class="user-name__star">
+  <% end %>
 </div>

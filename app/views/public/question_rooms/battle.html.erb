@@ -1,6 +1,6 @@
 <div class="container-fluid">
   <!-- 観覧でお題取得失敗の場合、ホームへ戻るボタンを表示する -->
-  <% if @question_rooms.nil? %>
+  <% if @is_failure == true %>
   <div class="row">
     <div class="col-lg-10 col-sm-10">
       <p>対戦中の部屋が見つかりませんでした。トップ画面へ戻ります。</p>

@@ -1,9 +1,8 @@
 <div class="container-fluid">
-  <div class="row justify-content-center">
-    <div class="col-lg-10 d-flex justify-content-center">
+  <div class="row">
+    <div class="col-lg-12">
       <h1>
-        <%= render partial: 'templates/user_name', locals: {user: @user, url: ""} %>
-        さんの個人情報
+        <%= render partial: 'templates/user_name', locals: {user: @user, url: ""} %>さんの個人情報
       </h1>
     </div>
   </div>
@@ -22,11 +21,15 @@
           <th>ランク</th>
           <td><%= @user.rank_i18n %></td>
         </tr>
+         <tr>
+          <th>回答総数</th>
+          <td><%= @user.total_answer_count %>個</td>
+        </tr>
         <tr>
           <th>平均ナイス獲得数</th>
           <% average = 0 %>
           <% if @user.total_answer_count != 0 %>
-            <% average = @user.total_nice_count / @user.total_answer_count %>
+            <% average = (@user.total_nice_count.fdiv(@user.total_answer_count)).floor(2) %>
           <% end %>
           <td><label><%= "#{average}" %>個</label></td>
         </tr>

@@ -1,4 +1,12 @@
 class Admin::HomesController < ApplicationController
+  before_action :signed_in_check, only: [:search]
+  
+  def signed_in_check
+    if !admin_signed_in?
+      redirect_to new_admin_session_path
+    end
+  end
+  
   def top
     @question_rooms = QuestionRoom.all.order("created_at DESC")
   end

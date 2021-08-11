@@ -1,4 +1,12 @@
 class Admin::UsersController < ApplicationController
+  before_action :signed_in_check
+  
+  def signed_in_check
+    if !admin_signed_in?
+      redirect_to new_admin_session_path
+    end
+  end
+  
   def show
     @user = User.find(params[:id])
   end

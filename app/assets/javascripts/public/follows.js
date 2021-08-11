@@ -17,7 +17,6 @@ $(document).on('turbolinks:load', function(){
       var cnt = 1
       $.each(panelist_ids, function(key, value){
         var user = "user"+cnt;
-        // $('#follow-modal__user-area').append(`<%= render partial: 'public/question_rooms/finish_modal_user', locals: {user_id: ${value}, key: ${key}} %>`)
         $('#follow-modal__user-area').append(`<label>${panelist_names.panelist1_name}</label><input type="checkbox" name="${user}_flag">`);
         $('#follow-modal__user-area').append(`<input type="hidden" name="${user}_id" value="${value}">`);
         cnt+=1;
