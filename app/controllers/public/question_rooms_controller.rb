@@ -139,6 +139,7 @@ class Public::QuestionRoomsController < ApplicationController
       end
 
       @is_failure=false
+      @question_rooms = QuestionRoom.where(id: qrs.question_room1_id).or(QuestionRoom.where(id: qrs.question_room2_id)).or(QuestionRoom.where(id: qrs.question_room3_id))
 
       # @is_audienceを作成
       # booleanのままで問題ないが、htmlでのdataの表記を揃えたいのであえて文字列にした
@@ -259,17 +260,6 @@ class Public::QuestionRoomsController < ApplicationController
   def milsec_from_epoch_japan(y_m_d_h_m_s)
     # y_m_d_h_m_s...年月日時分秒をハイフン区切りの文字列で表したもの
 
-    # second_mil = 1000           # 秒のミリ秒
-    # minute_mil = 60*second_mil  # 分のミリ秒
-    # hour_mil = 60*minute_mil    # 時のミリ秒
-    # date_mil = 24*hour_mil      # 日のミリ秒
-    # month__135781012mil = date_mil*31  # 31日月のミリ秒
-    # month_46911_mil = date_mil*30  # 30日月のミリ秒
-    # month_2_mil = date_mil*28 # 2月(平年)のミリ秒
-    # month_2_leap_mil = month_2_mil + date_mil # 2月(閏年)のミリ秒
-    # year_mil = 365*date_mil     # 平年のミリ秒
-    # leap_year_mil = year_mil + date_mil # 閏年のミリ秒
-
     splited = y_m_d_h_m_s.split('-')
 
     # 経過秒を計算
@@ -288,6 +278,11 @@ class Public::QuestionRoomsController < ApplicationController
     question_rooms_array = QuestionRoom.where(room_status: :running).to_a
     if question_rooms_array.length==0
       return -1
+    end
+
+    # 取得した対戦中のお題部屋から、ログインユーザが参戦しているものを除外
+    question_rooms_array.delete_if do |qr|
+      qr.panelists.where(user_id: current_user.id).count>0
     end
 
     random = Random.rand(0..question_rooms_array.length-1)

@@ -16,7 +16,13 @@
           <%= f.email_field :email, class:"col-lg-9", placeholder: "ogiri@ogiri.com" %>
         </div>
         <div class="row form-group">
-          <label class="col-lg-3">ランク変更</label>
+          <div class="col-lg-3">
+            <label>ランク変更</label>
+            <p>
+              現在のランク以下にランクダウンできます。<br>
+              再びランクアップするにはナイスを再び一定数獲得する必要があります。
+            </p>
+          </div>
           <!-- enum_helperで選択肢を日本語化-->
           <%= f.select :rank, @rank_keys.map{|k| [I18n.t("enums.user.rank.#{k}"), k]}, class:"col-lg-4" %>
         </div>

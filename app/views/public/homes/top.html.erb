@@ -1,4 +1,10 @@
 <div class="container">
+  <div class="row">
+    <div class="col-lg-12">
+      <%= notice %>
+    </div>
+  </div>
+
   <!-- ランクアップモーダル-->
   <% if !current_user.nil? %>
     <div class="row" id="rankup-modal__area" data-rankup=<%= @rankup %>>
@@ -31,5 +37,5 @@
       <% end %>
     </div>
   </div>
-  <%= link_to '対戦画面へ(開発者モード)', battle_path(qr1_id: 1, qr2_id: 2, qr3_id:3) %>
+  <%#= link_to '対戦画面へ(開発者モード)', battle_path(qr1_id: 1, qr2_id: 2, qr3_id:3) %>
 </div>

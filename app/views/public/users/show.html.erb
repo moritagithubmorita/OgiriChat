@@ -1,8 +1,11 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col-lg-12">
-      <h1>
-        <%= render partial: 'templates/user_name', locals: {user: @user, url: ""} %>さんの個人情報
+      <h1 class="view-title d-flex">
+        <div>
+          <%= render partial: 'templates/user_name', locals: {user: @user, url: ""} %>
+        </div>
+        さんの個人情報
       </h1>
     </div>
   </div>

@@ -8,6 +8,7 @@ class Public::InquiriesController < ApplicationController
   def create
     @inquiry = Inquiry.new(inquiry_params)
     if @inquiry.save
+      flash[:notice]='お問い合わせありがとうございます!'
       redirect_to root_path
     else
       render :new
