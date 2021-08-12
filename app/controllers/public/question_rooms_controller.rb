@@ -13,23 +13,47 @@ class Public::QuestionRoomsController < ApplicationController
 
   # マッチメイク画面
   def match_make
-    # 処理の流れ
-    # 1. 対戦に使うQuestionRoomを3つ取得する。マッチング中>待機中の順に優先して取得する。
+    # <<<処理の流れ>>>
+    # 1. 対戦に使うQuestionRoomを3つ取得する。マッチング中->待機中の順に優先して取得する。
     #     -> もし3つ取得できなかったときは「準備中画面」に遷移する。
     # 2. 取得した全ての部屋のroom_statusをmatching、is_setをtrueにする
     # 3. その部屋にすでに他の入室者がいた場合それを取得
-    # 4. users取得"後"、QuestionRoom(お題)に紐づくPanelist(回答者)をそれぞれに対し1つずつ作成。
+    # 4. users取得"後"、QuestionRoom(お題)に紐づくPanelist(回答者)を各お題に対し1つずつ作成。
     # 5. サブスクライブ時に使用するroom_idをhtmlのdata-属性に渡すための文字列を作成
 
-    @question_rooms = QuestionRoom.where(room_status: :matching, is_active: true).limit(3)  # マッチング中の部屋を探す
-    room_count = @question_rooms.count
+    # マッチング中の部屋を取得。すでに自分が参戦したもの(つまり途中退出した部屋)は除外する
+    all_matching_qrs = QuestionRoom.where(room_status: :matching, is_active: true).to_a # 配列にする
+    room_count = all_matching_qrs.length
+    # 取得できなかった場合はstandby部屋取得用の処理をする
+    if room_count < 3
+      # 特に何もしない
+    # 取得できた場合、自身が参加した部屋を除外する処理
+    else
+      # 除外処理
+      all_matching_qrs.delete_if do |mqr|
+        mqr.panelists.where(user_id: current_user.id).count>0
+      end
+
+      # 3個残らなかった場合次のstandby部屋検索用の処理をする
+      if all_matching_qrs.length < 3
+        room_count = -1
+      # 3個以上残った場合、先頭から3つをお題に選出する
+      else
+        @question_rooms = []
+        for cnt in 0..2 do
+          @question_rooms.push(all_matching_qrs[cnt])
+        end
+      end
+    end
+
     # 発見した部屋の数が3部屋未満の場合、改めてstandbyを3部屋取得し直す
     if room_count < 3
       @question_rooms = QuestionRoom.where(room_status: :standby, is_active: true).limit(3) # 待機中の部屋を探す
       room_count = @question_rooms.count #今回発見した部屋の数
     end
-    # 部屋を3部屋取得できなかった場合、準備中画面に遷移
-    if room_count != 3
+
+    # 2回のリクエストにもかかわらず部屋を3部屋取得できなかった場合、準備中画面に遷移
+    if room_count < 3
       redirect_to stand_by_path
       return
     end
@@ -84,10 +108,10 @@ class Public::QuestionRoomsController < ApplicationController
     # 参戦時の処理
     if params[:from_top].nil? && params[:from_notice].nil?
       # 今回使用するお題ルームを3つ再度取得
-      qr1 = QuestionRoom.where(id: params[:qr1_id])
-      qr2 = QuestionRoom.where(id: params[:qr2_id])
-      qr3 = QuestionRoom.where(id: params[:qr3_id])
-      @question_rooms = qr1.or(qr2).or(qr3)
+      @question_rooms = []
+      @question_rooms.push(QuestionRoom.find(params[:qr1_id]))
+      @question_rooms.push(QuestionRoom.find(params[:qr2_id]))
+      @question_rooms.push(QuestionRoom.find(params[:qr3_id]))
 
       # 使用するお題(question_rooms)のroom_statusをrunningにする
       @question_rooms.each do |question_room|
@@ -283,6 +307,10 @@ class Public::QuestionRoomsController < ApplicationController
     # 取得した対戦中のお題部屋から、ログインユーザが参戦しているものを除外
     question_rooms_array.delete_if do |qr|
       qr.panelists.where(user_id: current_user.id).count>0
+    end
+
+    if question_rooms_array.length==0
+      return -1
     end
 
     random = Random.rand(0..question_rooms_array.length-1)

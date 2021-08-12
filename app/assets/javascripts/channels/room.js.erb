@@ -7,21 +7,31 @@
 /* マッチメイクに関するjs
   1.先に入室しているユーザがいればその人数をuser_countに取得する
   2.htmlのdata属性からマッチメイク対象のQuestionRoom(部屋)のidを連想配列で取得
-  3.サブスクライブ依頼をサーバーに出し、全ての部屋の接続が成功したら入室したことを最後のチャンネルに伝え、ログインユーザ情報をブロードキャストする。
-  4.receivedでユーザ情報をキャッチし、ユーザ情報を表示する
+  3.既存のroom接続を全て切断する
+  4.サブスクライブ依頼をサーバーに出し、全ての部屋の接続が成功したら入室したことを最後のチャンネルに伝え、ログインユーザ情報をブロードキャストする。
+  5.receivedでユーザ情報をキャッチし、ユーザ情報を表示する
 */
 
 /*global $*/
 
-var NUMBER_OF_PEOPLE = 2  // 入室できるユーザの定員
-var user_count = 0  // 入室したユーザの人数
-var connected_room_count = 0  // 接続に成功したチャンネル数
-var qr_ids = null // QuestionRoomのid
+let NUMBER_OF_PEOPLE = 2  // 入室できるユーザの定員
+let user_count = 0  // 入室したユーザの人数
+let connected_room_count = 0  // 接続に成功したチャンネル数
+let qr_ids = null // QuestionRoomのid
+let roomChannels = {};  // チャンネルサブスリプション用ハッシュ
 
 $(document).on('turbolinks:load', function() {
+
   user_count = $('#match-make').data('user-count'); // 入室したユーザの人数を取得
   qr_ids = $('#match-make').data('question-room-ids');  //全question_room(3つ)のidを連想配列で取得
-  var roomChannels = {} // チャンネルサブスクリプション用ハッシュ
+
+  //すでに接続があった場合、それらを全て切断する
+  $.each( roomChannels, function( key, value ) {
+    console.log('既存の接続を確認。切断します');
+    App.cable.subscriptions.remove(value);
+    delete roomChannels[key];
+    connected_room_count-=1;
+  });
 
   // チャンネルサブスクリプションを作成し、連想配列に格納する
   var count = 1
@@ -32,6 +42,7 @@ $(document).on('turbolinks:load', function() {
       // チャンネルに接続されたら接続カウンタを+1
       // もし全部の部屋に接続できたら入室したことを"最後の部屋のみ"に通知し、ログインユーザ情報をブロードキャストさせる
       connected: function() {
+        console.log('room connected!');
         connected_room_count+=1;
         console.log(connected_room_count)
 

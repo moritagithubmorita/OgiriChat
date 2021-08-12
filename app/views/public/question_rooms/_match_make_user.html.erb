@@ -1,5 +1,5 @@
 <div class="match-make-user match-make__user">
-  <%= image_tag 'user.png', class:"match-make-user__image" %>
+  <div class="match-make-user__image"></div>
   <p class="match-make-user__rank">
     <%= user.rank_i18n %>
   </p>
@@ -9,7 +9,7 @@
   <p class="match-make-user__average">
     <% average = 0 %>
     <% if user.total_answer_count>0 %>
-      <% average = user.total_nice_count/user.total_answer_count %>
+      <% average = (user.total_nice_count.fdiv(user.total_answer_count)).floor(2) %>
     <% end %>
     平均ナイス獲得数 : <%= average %>個/答
   </p>

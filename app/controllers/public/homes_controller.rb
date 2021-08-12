@@ -33,6 +33,9 @@ class Public::HomesController < ApplicationController
 
   private
 
+  # 全てのテーブルを初期状態に戻す
+  # 開始時に存在しないデータは全削除
+  # 初期値のあるものを初期化
   def reset_all_tables
     User.all.each do |user|
       user.update(total_nice_count: 0, total_answer_count: 0, rankup_nice_count: 0, star_count: 0, rank: :fledgling)

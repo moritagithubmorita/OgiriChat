@@ -1,4 +1,9 @@
 .navbar{
+  // ハンバーガーアイコン
+  &__icon{
+    background-image: image-url('menu.png') !important;
+  }
+
   &__inquiry{
 
     &--default{
@@ -9,12 +14,12 @@
       text-shadow: 1px 0 5px black;
     }
   }
-  
+
   &__notice{
     &--default{
-      
+
     }
-    
+
     &--unread{
       text-shadow: 1px 0 5px;
     }
