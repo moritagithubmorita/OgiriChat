@@ -1424,3 +1424,86 @@ An unauthorized connection attempt was rejected
 Failed to upgrade to WebSocket (REQUEST_METHOD: GET, HTTP_CONNECTION: upgrade, HTTP_UPGRADE: websocket)
 Finished "/cable/" [WebSocket] for 210.153.229.16 at 2021-08-12 11:15:39 +0000
 Finished "/cable/" [WebSocket] for 210.153.229.16 at 2021-08-12 11:15:39 +0000
+Started GET "/" for 210.153.229.16 at 2021-08-15 10:12:32 +0000
+Cannot render console from 210.153.229.16! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  ↳ /home/ec2-user/.rvm/gems/ruby-2.6.3/gems/activerecord-5.2.6/lib/active_record/log_subscriber.rb:98
+Processing by Public::HomesController#top as HTML
+  Rendering public/homes/top.html.erb within layouts/application
+  Rendered public/homes/top.html.erb within layouts/application (4.4ms)
+Started GET "/" for 210.153.229.16 at 2021-08-15 10:12:34 +0000
+Cannot render console from 210.153.229.16! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255
+Processing by Public::HomesController#top as HTML
+  Rendering public/homes/top.html.erb within layouts/application
+  Rendered public/homes/top.html.erb within layouts/application (1.0ms)
+Completed 200 OK in 4274ms (Views: 4265.2ms | ActiveRecord: 0.0ms)
+
+
+  [1m[36mAdmin Load (0.2ms)[0m  [1m[34mSELECT  "admins".* FROM "admins" WHERE "admins"."id" = ? ORDER BY "admins"."id" ASC LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/views/layouts/application.html.erb:17
+  [1m[35m (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "inquiries" WHERE "inquiries"."is_readed" = ?[0m  [["is_readed", 0]]
+  ↳ app/views/layouts/application.html.erb:76
+Completed 200 OK in 3334ms (Views: 3331.9ms | ActiveRecord: 1.5ms)
+
+
+Started GET "/cable" for 210.153.229.16 at 2021-08-15 10:12:38 +0000
+Cannot render console from 210.153.229.16! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255
+Started GET "/cable/" [WebSocket] for 210.153.229.16 at 2021-08-15 10:12:38 +0000
+Successfully upgraded to WebSocket (REQUEST_METHOD: GET, HTTP_CONNECTION: upgrade, HTTP_UPGRADE: websocket)
+An unauthorized connection attempt was rejected
+Failed to upgrade to WebSocket (REQUEST_METHOD: GET, HTTP_CONNECTION: upgrade, HTTP_UPGRADE: websocket)
+Finished "/cable/" [WebSocket] for 210.153.229.16 at 2021-08-15 10:12:38 +0000
+Finished "/cable/" [WebSocket] for 210.153.229.16 at 2021-08-15 10:12:38 +0000
+Started GET "/cable" for 210.153.229.16 at 2021-08-15 10:12:47 +0000
+Cannot render console from 210.153.229.16! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255
+Started GET "/cable/" [WebSocket] for 210.153.229.16 at 2021-08-15 10:12:47 +0000
+Successfully upgraded to WebSocket (REQUEST_METHOD: GET, HTTP_CONNECTION: upgrade, HTTP_UPGRADE: websocket)
+An unauthorized connection attempt was rejected
+Failed to upgrade to WebSocket (REQUEST_METHOD: GET, HTTP_CONNECTION: upgrade, HTTP_UPGRADE: websocket)
+Finished "/cable/" [WebSocket] for 210.153.229.16 at 2021-08-15 10:12:47 +0000
+Finished "/cable/" [WebSocket] for 210.153.229.16 at 2021-08-15 10:12:47 +0000
+Started GET "/cable" for 210.153.229.16 at 2021-08-15 10:13:00 +0000
+Cannot render console from 210.153.229.16! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255
+Started GET "/cable/" [WebSocket] for 210.153.229.16 at 2021-08-15 10:13:00 +0000
+Successfully upgraded to WebSocket (REQUEST_METHOD: GET, HTTP_CONNECTION: upgrade, HTTP_UPGRADE: websocket)
+An unauthorized connection attempt was rejected
+Failed to upgrade to WebSocket (REQUEST_METHOD: GET, HTTP_CONNECTION: upgrade, HTTP_UPGRADE: websocket)
+Finished "/cable/" [WebSocket] for 210.153.229.16 at 2021-08-15 10:13:00 +0000
+Finished "/cable/" [WebSocket] for 210.153.229.16 at 2021-08-15 10:13:00 +0000
+Started GET "/cable" for 210.153.229.16 at 2021-08-15 10:13:08 +0000
+Cannot render console from 210.153.229.16! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255
+Started GET "/cable/" [WebSocket] for 210.153.229.16 at 2021-08-15 10:13:08 +0000
+Successfully upgraded to WebSocket (REQUEST_METHOD: GET, HTTP_CONNECTION: upgrade, HTTP_UPGRADE: websocket)
+An unauthorized connection attempt was rejected
+Failed to upgrade to WebSocket (REQUEST_METHOD: GET, HTTP_CONNECTION: upgrade, HTTP_UPGRADE: websocket)
+Finished "/cable/" [WebSocket] for 210.153.229.16 at 2021-08-15 10:13:08 +0000
+Finished "/cable/" [WebSocket] for 210.153.229.16 at 2021-08-15 10:13:08 +0000
+Started GET "/cable" for 210.153.229.16 at 2021-08-15 10:13:17 +0000
+Cannot render console from 210.153.229.16! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255
+Started GET "/cable/" [WebSocket] for 210.153.229.16 at 2021-08-15 10:13:17 +0000
+Successfully upgraded to WebSocket (REQUEST_METHOD: GET, HTTP_CONNECTION: upgrade, HTTP_UPGRADE: websocket)
+An unauthorized connection attempt was rejected
+Failed to upgrade to WebSocket (REQUEST_METHOD: GET, HTTP_CONNECTION: upgrade, HTTP_UPGRADE: websocket)
+Finished "/cable/" [WebSocket] for 210.153.229.16 at 2021-08-15 10:13:17 +0000
+Finished "/cable/" [WebSocket] for 210.153.229.16 at 2021-08-15 10:13:17 +0000
+Started GET "/users/sign_in" for 210.153.229.16 at 2021-08-15 10:13:18 +0000
+Cannot render console from 210.153.229.16! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255
+Processing by Public::SessionsController#new as HTML
+  Rendering public/sessions/new.html.erb within layouts/application
+  Rendered templates/_error.html.erb (0.4ms)
+  Rendered public/sessions/new.html.erb within layouts/application (4.7ms)
+  [1m[36mAdmin Load (0.1ms)[0m  [1m[34mSELECT  "admins".* FROM "admins" WHERE "admins"."id" = ? ORDER BY "admins"."id" ASC LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  ↳ app/views/layouts/application.html.erb:17
+  [1m[35m (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "inquiries" WHERE "inquiries"."is_readed" = ?[0m  [["is_readed", 0]]
+  ↳ app/views/layouts/application.html.erb:76
+Completed 200 OK in 107ms (Views: 91.1ms | ActiveRecord: 0.9ms)
+
+
+Started GET "/cable" for 210.153.229.16 at 2021-08-15 10:13:19 +0000
+Cannot render console from 210.153.229.16! Allowed networks: 127.0.0.1, ::1, 127.0.0.0/127.255.255.255
+Started GET "/cable/" [WebSocket] for 210.153.229.16 at 2021-08-15 10:13:19 +0000
+Successfully upgraded to WebSocket (REQUEST_METHOD: GET, HTTP_CONNECTION: upgrade, HTTP_UPGRADE: websocket)
+An unauthorized connection attempt was rejected
+Failed to upgrade to WebSocket (REQUEST_METHOD: GET, HTTP_CONNECTION: upgrade, HTTP_UPGRADE: websocket)
+Finished "/cable/" [WebSocket] for 210.153.229.16 at 2021-08-15 10:13:19 +0000
+Finished "/cable/" [WebSocket] for 210.153.229.16 at 2021-08-15 10:13:19 +0000
