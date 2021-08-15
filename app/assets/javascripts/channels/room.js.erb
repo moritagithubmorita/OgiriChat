@@ -13,12 +13,11 @@
 */
 
 /*global $*/
-
-let NUMBER_OF_PEOPLE = 2  // 入室できるユーザの定員
-let user_count = 0  // 入室したユーザの人数
-let connected_room_count = 0  // 接続に成功したチャンネル数
-let qr_ids = null // QuestionRoomのid
-let roomChannels = {};  // チャンネルサブスリプション用ハッシュ
+var NUMBER_OF_PEOPLE = 2  // 入室できるユーザの定員
+var user_count = 0  // 入室したユーザの人数
+var connected_room_count = 0  // 接続に成功したチャンネル数
+var qr_ids = null // QuestionRoomのid
+var roomChannels = {};  // チャンネルサブスリプション用ハッシュ
 
 $(document).on('turbolinks:load', function() {
 
