@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 class Public::SessionsController < Devise::SessionsController
-  #退会顧客がログインできないようにする
-  before_action :loginable_check, only: [:create]
   # 管理者とユーザの同時ログイン状態を禁止する
   before_action :admin_signed_in_check, only: [:create]
+  #退会顧客がログインできないようにする
+  before_action :loginable_check, only: [:create]
 
   #退会済み顧客のログインを阻止する処理
   def loginable_check
