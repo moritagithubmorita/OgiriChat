@@ -7,7 +7,7 @@ class Admin::SessionsController < Devise::SessionsController
   # ユーザと管理者の同時ログインを禁止する
   def user_signed_in_check
     if user_signed_in?
-      reset_session
+      sign_out current_user
     end
   end
 
