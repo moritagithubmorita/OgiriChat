@@ -20,9 +20,12 @@ var qr_ids = null // QuestionRoomのid
 var roomChannels = {};  // チャンネルサブスリプション用ハッシュ
 
 $(document).on('turbolinks:load', function() {
+  console.log('room.js!');
 
   user_count = $('#match-make').data('user-count'); // 入室したユーザの人数を取得
   qr_ids = $('#match-make').data('question-room-ids');  //全question_room(3つ)のidを連想配列で取得
+  console.log(qr_ids);
+  console.log(user_count);
 
   //すでに接続があった場合、それらを全て切断する
   $.each( roomChannels, function( key, value ) {

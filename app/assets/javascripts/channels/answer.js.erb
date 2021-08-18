@@ -31,7 +31,9 @@ var timeoutArray = [];  // setTimeoutを画面遷移時にクリアするため�
 
 $(document).on('turbolinks:load', function(){
   qr_ids_answer = $('#question').data('question-room-ids'); // 今回使う問題のidを取得
+  console.log(qr_ids_answer);
   qr_bodies = $('#question').data('question-room-bodies'); // 今回使う問題のbodyを取得
+  console.log(qr_bodies);
   // 観覧かどうか
   is_audience = $('#question').data('is-audience'); // 観覧ならtrueが入っている
   if(is_audience!=true){
