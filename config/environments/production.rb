@@ -95,6 +95,6 @@ Rails.application.configure do
   # 以下ActionCable用の記述
   config.action_cable.url = 'ws://35.76.6.126/cable'
   config.action_cable.allowed_request_origins = [ 'https://35.76.6.126', 'http://35.76.6.126' ]
-  ActionCable.server.config.disable_request_forgery_protection = true
+  # ActionCable.server.config.disable_request_forgery_protection = true
 
 end
