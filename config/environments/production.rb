@@ -93,7 +93,7 @@ Rails.application.configure do
   config.active_record.dump_schema_after_migration = false
 
   # 以下ActionCable用の記述
-  config.action_cable.url = 'ws://35.76.6.126/cable'
+  # config.action_cable.url = 'ws://35.76.6.126/cable'
   config.action_cable.allowed_request_origins = [ 'https://35.76.6.126', 'http://35.76.6.126' ]
   # ActionCable.server.config.disable_request_forgery_protection = true
 
