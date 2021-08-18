@@ -94,5 +94,6 @@ Rails.application.configure do
 
   # 以下ActionCable用の記述
   config.action_cable.url = 'wss://35.76.6.126/cable'
+  ActionCable.server.config.disabled_request_forgery_protection = true
 
 end
