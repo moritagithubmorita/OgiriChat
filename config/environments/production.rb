@@ -91,4 +91,8 @@ Rails.application.configure do
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
+
+  # 以下ActionCable用の記述
+  config.action_cable.url = 'wss://35.76.6.126/cable'
+
 end
