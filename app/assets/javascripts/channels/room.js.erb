@@ -43,7 +43,6 @@ $(document).on('turbolinks:load', function() {
 
     var key_name = "roomChannel"+count  // キー作成
      roomChannels[key_name] = App.cable.subscriptions.create({ channel: 'RoomChannel', question_room_id: value },{
-
       // チャンネルに接続されたら接続カウンタを+1
       // もし全部の部屋に接続できたら入室したことを"最後の部屋のみ"に通知し、ログインユーザ情報をブロードキャストさせる
       connected() {
@@ -99,6 +98,7 @@ $(document).on('turbolinks:load', function() {
     });
 
     count +=1
+    console.log(`接続試行結果:${roomChannels[key_name]}`);
 
   })
 
