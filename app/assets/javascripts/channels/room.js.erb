@@ -39,7 +39,7 @@ $(document).on('turbolinks:load', function() {
   var count = 1
   $.each(qr_ids, function(key, value){
     console.log('room#コネクションループ');
-    console.log(`room#App.cable:${App.cable}`);
+    <!--console.log(`room#App.cable:${App.cable}`);-->
 
     var key_name = "roomChannel"+count  // キー作成
      roomChannels[key_name] = App.cable.subscriptions.create({ channel: 'RoomChannel', question_room_id: value },{
