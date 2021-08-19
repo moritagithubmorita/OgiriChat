@@ -73,5 +73,5 @@ gem 'pry-rails'
 gem 'dotenv-rails'
 group :production do
   gem 'mysql2'
-  gem 'redis', '~> 3.0'
+  # gem 'redis', '~> 3.0'
 end
