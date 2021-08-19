@@ -39,14 +39,14 @@ $(document).on('turbolinks:load', function() {
   var count = 1
   $.each(qr_ids, function(key, value){
     console.log('room#コネクションループ');
-    <!--console.log(`room#App.cable:${App.cable}`);-->
+    // console.log(`room#App.cable:${App.cable}`);
 
     var key_name = "roomChannel"+count  // キー作成
      roomChannels[key_name] = App.cable.subscriptions.create({ channel: 'RoomChannel', question_room_id: value },{
 
       // チャンネルに接続されたら接続カウンタを+1
       // もし全部の部屋に接続できたら入室したことを"最後の部屋のみ"に通知し、ログインユーザ情報をブロードキャストさせる
-      function connected() {
+      connected() {
         console.log('room connected!');
         connected_room_count+=1;
         console.log(connected_room_count)
@@ -60,17 +60,17 @@ $(document).on('turbolinks:load', function() {
       },
 
       // サブスクをサーバーに却下されるとよばれる
-      function rejected() {
+      rejected() {
         console.log('room#却下された');
       },
 
-      function disconnected() {
+      disconnected() {
       },
 
       // 入室したユーザ情報(外部テンプレート)を受け取り表示する(append)
       // 入室人数を+1
       // もし定員に達したら対戦画面に遷移
-      function received(data){
+      received(data){
         // 新たに入室したユーザを表示
         $('#match-make').append(data['message']);
 
