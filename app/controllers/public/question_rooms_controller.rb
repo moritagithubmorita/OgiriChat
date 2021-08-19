@@ -34,11 +34,12 @@ class Public::QuestionRoomsController < ApplicationController
       all_matching_qrs.delete_if do |mqr|
         mqr.panelists.where(user_id: current_user.id).count>0
       end
+      @room_count = all_matching_qrs.length
+      logger.debug("除外処理の結果@room_count=#{@room_count}")
 
       # 3個残らなかった場合次のstandby部屋検索用の処理をする
-      if all_matching_qrs.length < 3
-        logger.debug("match_make#除外の結果:matchingの数は#{@room_count}")
-        @room_count = -1
+      if @room_count < 3
+        logger.debug("match_make#除外の結果3個未満になってしまいました:matchingの数は#{@room_count}")
       # 3個以上残った場合、先頭から3つをお題に選出する
       else
         logger.debug("match_make#生き残ったmatching部屋の中から3部屋選出します")
@@ -47,6 +48,7 @@ class Public::QuestionRoomsController < ApplicationController
           @question_rooms.push(all_matching_qrs[cnt])
         end
         @room_count = @question_rooms.length
+        logger.debug("match_make#3部屋選出の結果:#{@room_count}")
       end
     end
 
