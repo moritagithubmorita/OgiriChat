@@ -48,7 +48,7 @@ class Public::QuestionRoomsController < ApplicationController
           @question_rooms.push(all_matching_qrs[cnt])
         end
         @room_count = @question_rooms.length
-        logger.debug("match_make#3部屋選出の結果:#{@room_count}")
+        logger.debug("match_make#3部屋選出結果:#{@room_count}")
       end
     end
 
