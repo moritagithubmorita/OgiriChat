@@ -39,7 +39,7 @@ $(document).on('turbolinks:load', function() {
   var count = 1
   $.each(qr_ids, function(key, value){
     console.log('room#コネクションループ');
-  
+
     var key_name = "roomChannel"+count  // キー作成
      roomChannels[key_name] = App.cable.subscriptions.create({ channel: 'RoomChannel', question_room_id: value },{
 
@@ -57,6 +57,11 @@ $(document).on('turbolinks:load', function() {
         }
 
       },
+
+      // サブスクをサーバーに却下されるとよばれる
+      rejected: function() {
+        console.log('room#却下された');
+      }
 
       disconneted: function() {
       },
