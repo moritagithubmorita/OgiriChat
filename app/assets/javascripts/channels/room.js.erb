@@ -46,7 +46,7 @@ $(document).on('turbolinks:load', function() {
 
       // チャンネルに接続されたら接続カウンタを+1
       // もし全部の部屋に接続できたら入室したことを"最後の部屋のみ"に通知し、ログインユーザ情報をブロードキャストさせる
-      connected: function() {
+      function connected() {
         console.log('room connected!');
         connected_room_count+=1;
         console.log(connected_room_count)
@@ -60,17 +60,17 @@ $(document).on('turbolinks:load', function() {
       },
 
       // サブスクをサーバーに却下されるとよばれる
-      rejected: function() {
+      function rejected() {
         console.log('room#却下された');
       },
 
-      disconneted: function() {
+      function disconnected() {
       },
 
       // 入室したユーザ情報(外部テンプレート)を受け取り表示する(append)
       // 入室人数を+1
       // もし定員に達したら対戦画面に遷移
-      received: function(data){
+      function received(data){
         // 新たに入室したユーザを表示
         $('#match-make').append(data['message']);
 
