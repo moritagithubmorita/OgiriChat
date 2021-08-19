@@ -13,7 +13,6 @@ class Public::QuestionRoomsController < ApplicationController
 
   # マッチメイク画面
   def match_make
-    binding.pry
     # <<<処理の流れ>>>
     # 1. 対戦に使うQuestionRoomを3つ取得する。マッチング中->待機中の順に優先して取得する。
     #     -> もし3つ取得できなかったときは「準備中画面」に遷移する。
@@ -47,6 +46,7 @@ class Public::QuestionRoomsController < ApplicationController
         for cnt in 0..2 do
           @question_rooms.push(all_matching_qrs[cnt])
         end
+        @room_count = @question_rooms.length
       end
     end
 
