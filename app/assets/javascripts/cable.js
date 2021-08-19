@@ -5,9 +5,6 @@
 //= require_self
 //= require_tree ./channels
 
-/*global $*/
-$(document).on('turbolinks:load', function(){
-
 (function() {
   this.App || (this.App = {});
 
@@ -15,6 +12,5 @@ $(document).on('turbolinks:load', function(){
   App.cable = ActionCable.createConsumer();
   console.log('cable.js#App.cable:');
   console.log(`${App.cable}`);
+  
 }).call(this);
-
-});
