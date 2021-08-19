@@ -24,12 +24,12 @@ $(document).on('turbolinks:load', function() {
 
   user_count = $('#match-make').data('user-count'); // 入室したユーザの人数を取得
   qr_ids = $('#match-make').data('question-room-ids');  //全question_room(3つ)のidを連想配列で取得
-  console.log(qr_ids);
-  console.log(user_count);
+  console.log(`room#qr_ids:${qr_ids}`);
+  console.log(`room#user_count: ${user_count}`);
 
   //すでに接続があった場合、それらを全て切断する
   $.each( roomChannels, function( key, value ) {
-    console.log('既存の接続を確認。切断します');
+    console.log('room#既存の接続を確認。切断します');
     App.cable.subscriptions.remove(value);
     delete roomChannels[key];
     connected_room_count-=1;
@@ -38,6 +38,8 @@ $(document).on('turbolinks:load', function() {
   // チャンネルサブスクリプションを作成し、連想配列に格納する
   var count = 1
   $.each(qr_ids, function(key, value){
+    console.log('room#コネクションループ');
+  
     var key_name = "roomChannel"+count  // キー作成
      roomChannels[key_name] = App.cable.subscriptions.create({ channel: 'RoomChannel', question_room_id: value },{
 
