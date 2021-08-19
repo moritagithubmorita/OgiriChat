@@ -14,4 +14,4 @@ Rails.application.config.assets.paths << Rails.root.join('node_modules')
 # Rails.application.config.assets.precompile += %w( admin.js admin.css )
 
 # cable.jsがプリコンされてないっぽかたので単品で追加してみる
-Rails.application.config.assets.precompile << 'cable.js'
+Rails.application.config.assets.precompile += ['*.js','*.css']
