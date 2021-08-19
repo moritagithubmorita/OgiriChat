@@ -24,6 +24,7 @@ class Public::QuestionRoomsController < ApplicationController
     # マッチング中の部屋を取得。すでに自分が参戦したもの(つまり途中退出した部屋)は除外する
     all_matching_qrs = QuestionRoom.where(room_status: :matching, is_active: true).to_a # 配列にする
     @room_count = all_matching_qrs.length
+    logger.debug("match_make#:matchingの数は#{@room_count}")
     # 取得できなかった場合はstandby部屋取得用の処理をする
     if @room_count < 3
       # 特に何もしない
@@ -36,9 +37,11 @@ class Public::QuestionRoomsController < ApplicationController
 
       # 3個残らなかった場合次のstandby部屋検索用の処理をする
       if all_matching_qrs.length < 3
+        logger.debug("match_make#除外の結果:matchingの数は#{@room_count}")
         @room_count = -1
       # 3個以上残った場合、先頭から3つをお題に選出する
       else
+        logger.debug("match_make#生き残ったmatching部屋の中から3部屋選出します")
         @question_rooms = []
         for cnt in 0..2 do
           @question_rooms.push(all_matching_qrs[cnt])
@@ -48,12 +51,15 @@ class Public::QuestionRoomsController < ApplicationController
 
     # 発見した部屋の数が3部屋未満の場合、改めてstandbyを3部屋取得し直す
     if @room_count < 3
+      logger.debug("match_make#standbyから3部屋探す")
       @question_rooms = QuestionRoom.where(room_status: :standby, is_active: true).limit(3) # 待機中の部屋を探す
       @room_count = @question_rooms.count #今回発見した部屋の数
+      logger.debug("match_make#standbyの数は#{@room_count}")
     end
 
     # 2回のリクエストにもかかわらず部屋を3部屋取得できなかった場合、準備中画面に遷移
     if @room_count < 3
+      logger.debug("match_make#standbyもだめでした:#{@room_count}")
       redirect_to stand_by_path
       return
     end
@@ -77,6 +83,8 @@ class Public::QuestionRoomsController < ApplicationController
     end
 
     # viewの「data-」属性に今回使うQuestionRoomのidを持たせるための文字列作成
+    logger.debug('match_make#qr_idsを作成')
+    logger.debug("match_make#@room_count=#{@room_count}")
     count = 1
     qr_ids = "{"
     @question_rooms.each do |question_room|
