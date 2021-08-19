@@ -229,7 +229,7 @@ class Public::QuestionRoomsController < ApplicationController
     panelists = QuestionRoom.find(params[:qr1_id]).panelists.where.not(user_id: current_user.id).to_a
     # ログインユーザがフォロー済みの参戦者を除外
     panelists.delete_if do |panelist|
-      !(User.find(panelist.user_id).followers.find_by(follower: current_user.id).nil?)
+      !(User.find(panelist.user_id).followers.find_by(follower_id: current_user.id).nil?)
     end
     # panelists = QuestionRoom.find(@question_room_ids[:qr1_id].to_i).panelists.where.not(user_id: current_user.id)
 
@@ -249,12 +249,15 @@ class Public::QuestionRoomsController < ApplicationController
   end
 
   def result
-    qr1 = QuestionRoom.where(id: params[:qr1_id].to_i)
-    qr2 = QuestionRoom.where(id: params[:qr2_id].to_i)
-    qr3 = QuestionRoom.where(id: params[:qr3_id].to_i)
-    @question_rooms = qr1.or(qr2).or(qr3)
+    @question_rooms = []
+    @question_rooms.push(QuestionRoom.find(params[:qr1_id]))
+    @question_rooms.push(QuestionRoom.find(params[:qr2_id]))
+    @question_rooms.push(QuestionRoom.find(params[:qr3_id]))
 
-    panelists = @question_rooms.first.panelists.where.not(user_id: current_user)
+    panelists = QuestionRoom.find(params[:qr1_id]).panelists.where.not(user_id: current_user.id).to_a
+    panelists.delete_if do |panelist|
+      !(User.find(panelist.user_id).followers.find_by(follower_id: current_user.id).nil?)
+    end
 
     strings = generate_panelist_ids_and_panelist_names_string(panelists)
 
