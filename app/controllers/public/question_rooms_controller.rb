@@ -220,10 +220,18 @@ class Public::QuestionRoomsController < ApplicationController
     QuestionRoom.find(params[:qr1_id]).finished!
     QuestionRoom.find(params[:qr2_id]).finished!
     QuestionRoom.find(params[:qr3_id]).finished!
+    @question_room_ids = {qr1_id: params[:qr1_id], qr2_id: params[:qr2_id], qr3_id: params[:qr3_id]}
 
     # 参戦した自分以外のpanelistのうち、未フォローのユーザのみ取得
-    @question_room_ids = {qr1_id: params[:qr1_id], qr2_id: params[:qr2_id], qr3_id: params[:qr3_id]}
-    panelists = QuestionRoom.find(@question_room_ids[:qr1_id].to_i).panelists.where.not(user_id: current_user.id)
+    # 1.ログインユーザ以外の参戦者を全取得
+    # 2.ログインユーザがフォロー済みの参戦者を除外する
+    # 自分以外の参戦者を全取得
+    panelists = QuestionRoom.find(params[:qr1_id]).panelists.where.not(user_id: current_user.id).to_a
+    # ログインユーザがフォロー済みの参戦者を除外
+    panelists.delete_if do |panelist|
+      !(User.find(panelist.user_id).followers.find_by(follower: current_user.id).nil?)
+    end
+    # panelists = QuestionRoom.find(@question_room_ids[:qr1_id].to_i).panelists.where.not(user_id: current_user.id)
 
     # 文字列作成
     strings = generate_panelist_ids_and_panelist_names_string(panelists)
@@ -272,21 +280,19 @@ class Public::QuestionRoomsController < ApplicationController
     # 文字列作成
     panelist_ids = "{"
     panelist_names = "{"
+
     cnt = 1
     panelists.each do |panelist|
       logger.debug("panelist.user_id=#{panelist.user_id}")
-      # panelistをフォロー済みの場合はフォロー確認の対象から外す(ハッシュに加えない)
-      if User.find(panelist.user_id).followers.find_by(follower_id: current_user.id).nil?
-      # 未フォローの場合、フォロー確認の対象とする(ハッシュに加えビューに渡す)
-        panelist_ids += "\"panelist#{cnt}_id\":\"#{panelist.user_id}\""
-        panelist_names += "\"panelist#{cnt}_name\":\"#{User.find(panelist.user_id).name}\""
-        cnt += 1
-        if cnt <= panelists.count
-          panelist_ids += ","
-          panelist_names += ","
-        end
+      panelist_ids += "\"panelist#{cnt}_id\":\"#{panelist.user_id}\""
+      panelist_names += "\"panelist#{cnt}_name\":\"#{User.find(panelist.user_id).name}\""
+      cnt += 1
+      if cnt <= panelists.count
+        panelist_ids += ","
+        panelist_names += ","
       end
     end
+
     panelist_ids += "}"
     panelist_names += "}"
 
