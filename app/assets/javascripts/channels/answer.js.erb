@@ -149,7 +149,7 @@ function battle_manager_audience(){
   var elapsed_time = current_time.getTime() - start_time; //[ミリ秒]
   console.log(`elapsed_time: ${elapsed_time}`);
 
-  // 3.対戦スケジューリング(および3.観覧開始までの投稿を全表示)
+  // 3.対戦スケジューリング(および4.観覧開始までの投稿を全表示)
   var cnt = 1;  // 何問目か
   var sum = 0;  // 対戦の各フェーズのdelayを足していく
   $.each(answerChannels, function(key, value){

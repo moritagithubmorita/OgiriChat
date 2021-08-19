@@ -266,11 +266,15 @@ class Public::QuestionRoomsController < ApplicationController
   # フォローモーダルのためのカスタムデータ属性用文字列を作成
   # フォロー対象者がいなかった場合は"{}"を返す
   def generate_panelist_ids_and_panelist_names_string(panelists)
+    # デバッグ
+    logger.debug("question_rooms_controller#finish#panelists.count=#{panelists.count}")
+
     # 文字列作成
     panelist_ids = "{"
     panelist_names = "{"
     cnt = 1
     panelists.each do |panelist|
+      logger.debug("panelist.user_id=#{panelist.user_id}")
       # panelistをフォロー済みの場合はフォロー確認の対象から外す(ハッシュに加えない)
       if User.find(panelist.user_id).followers.find_by(follower_id: current_user.id).nil?
       # 未フォローの場合、フォロー確認の対象とする(ハッシュに加えビューに渡す)
