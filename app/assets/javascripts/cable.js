@@ -5,6 +5,9 @@
 //= require_self
 //= require_tree ./channels
 
+/*global $*/
+$(document).on('turbolinks:load', function(){
+
 (function() {
   this.App || (this.App = {});
 
@@ -13,3 +16,5 @@
   console.log('cable.js#App.cable:');
   console.log(`${App.cable}`);
 }).call(this);
+
+});
