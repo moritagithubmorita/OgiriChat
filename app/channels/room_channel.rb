@@ -3,7 +3,10 @@ class RoomChannel < ApplicationCable::Channel
     stream_from "room_channel_#{params[:question_room_id]}"
 
     # デバック。本番でbinding.pryが動くか怪しかったので。
-    User.create(name: "ダミー#{Time.new.strftime("%Y-%m-%d %H:%M:%S")}", email: 'dummy@dummy', password: '000000')
+    t = Time.new.strftime("%Y-%m-%d%H:%M:%S")
+    User.create(name: "ダミー#{t}", email: "dummy@dummy#{t}", password: '000000')
+    logger.debug("room_channel.rb#params[:question_room_id]: #{params[:question_room_id]}")
+
   end
 
   def unsubscribed
