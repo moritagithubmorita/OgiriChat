@@ -268,7 +268,7 @@ class Public::QuestionRoomsController < ApplicationController
   # 回答全てを外部テンプレートで返す
   def get_all_answers_of
     qr_id = params[:qr_id].to_i
-    answers = QuestionRoom.find(qr_id).answers.all
+    answers = QuestionRoom.find(qr_id).answers.all.order("created_at DESC")
     render partial: 'public/question_rooms/answer', collection: answers, as: 'answer'
   end
 
