@@ -9,9 +9,10 @@
   }
 
   &__star{
-    display: inline-box;
+    display: inline;
     width: 5%;
     height: 3rem;
+    padding: 0 10px;
     background-size: contain;
     background-repeat: no-repeat;
     background-position: left center;
