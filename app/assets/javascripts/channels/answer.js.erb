@@ -146,8 +146,8 @@ function battle_manager_audience(){
   prepare_battle_audience();
 
   // 2.経過時間計算
-  var start_time = $('#question').data('start-time'); // 開始時間を文字列で取得[ミリ秒]
-  start_time += ADJUSTMENT; // 調整値を足して開始時間を遅らせる(createdだと早すぎる)
+  var start_time = $('#question').data('start-time'); // 開始時間(QuestionRoomSetを作った時間だから、ちょっと前)を文字列で取得[ミリ秒]
+  start_time += ADJUSTMENT; // 調整値を足して開始時間を遅らせる(上記の補正分)。これが大きすぎることがあり、その場合即終了してしまう
   console.log(`start_time: ${start_time}`);
   var current_time = new Date();
   var elapsed_time = current_time.getTime() - start_time; //[ミリ秒]
