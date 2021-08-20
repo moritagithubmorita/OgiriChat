@@ -23,10 +23,11 @@ class Public::HomesController < ApplicationController
     # ランクアップ処理が認可された場合、ランクアップを実行する
     if params[:do_rankup]=="true"
       current_user.update(rank: current_user.rank_before_type_cast+1, rankup_nice_count: 0)
+    # ランクアップはしないが、それがベテランー＞マスターへの昇級段階だった場合、以下の処理を行う
     else
       # ランクアップ辞退だが、それがベテラン->マスターへの昇級段階だった場合、star_countを1増やす
       if params[:from_veteran_to_master]=="true"
-        current_user.update(star_count: current_user.star_count+1)
+        current_user.update(star_count: current_user.star_count+1, rankup_nice_count: 0)
       end
     end
   end
