@@ -24,7 +24,7 @@ class AnswerChannel < ApplicationCable::Channel
 
     # ログインユーザを更新
     if !(current_user.update(total_answer_count: current_user.total_answer_count+1))
-      p "*************total_answer_countインクリメントシっぱい******************"
+      loger.debug("*************total_answer_countインクリメントシっぱい******************")
     end
 
     # ブロードキャスト

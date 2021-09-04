@@ -10,7 +10,5 @@
 
   /*global ActionCable*/
   App.cable = ActionCable.createConsumer();
-  console.log('cable.js#App.cable:');
-  console.log(`${App.cable}`);
 
 }).call(this);

@@ -31,9 +31,7 @@ var timeoutArray = [];  // setTimeoutを画面遷移時にクリアするため�
 
 $(document).on('turbolinks:load', function(){
   qr_ids_answer = $('#question').data('question-room-ids'); // 今回使う問題のidを取得
-  console.log(qr_ids_answer);
   qr_bodies = $('#question').data('question-room-bodies'); // 今回使う問題のbodyを取得
-  console.log(qr_bodies);
   // 観覧かどうか
   is_audience = $('#question').data('is-audience'); // 観覧ならtrueが入っている
   if(is_audience!=true){
@@ -42,7 +40,6 @@ $(document).on('turbolinks:load', function(){
 
   //すでに接続があった場合、それらを全て切断する
   $.each( answerChannels, function( key, value ) {
-    console.log('answer#既存の接続を確認。切断します');
     App.cable.subscriptions.remove(value);
     delete answerChannels[key];
     connected_channel_count-=1;
@@ -57,16 +54,11 @@ $(document).on('turbolinks:load', function(){
       // 全ての回答用チャンネルをサブスクライブできたら対戦を開始する
       connected: function() {
         // Called when the subscription is ready for use on the server
-        console.log('connected')
         connected_channel_count+=1
 
-        console.log(`connected_channel_count: ${connected_channel_count}`);
-        console.log(`qr_ids_answer: ${qr_ids_answer}`);
         if(qr_ids_answer != undefined){
           // 全ての接続が完了したらお題をスタートする
           if(connected_channel_count==Object.keys(qr_ids_answer).length){
-
-            console.log(answerChannels);
 
             if(is_audience){
               battle_manager_audience();  //観覧用対戦を管理する関数
@@ -79,12 +71,10 @@ $(document).on('turbolinks:load', function(){
 
       disconnected: function() {
         // Called when the subscription has been terminated by the server
-        console.log("answer:チャンネルとの接続が切断されました");
       },
 
       // 回答を受け取り表示(append())する
       received: function(data) {
-        console.log(`received! message: ${data['message']}`);
         return $('#answers').prepend(data['message']);
       },
 
@@ -110,12 +100,8 @@ function battle_manager(){
     2.対戦終了をスケジューリング
   */
 
-  console.log('対戦スタート')
-
   // 対戦をスケジューリング
   // 1問目の準備〜3問目の終了処理までのスケジューリング
-  console.log(`start_time: ${$('#question').data('start-time')}`);
-  console.log(`current_time: ${new Date().getTime()}`);
 
   var cnt = 1
   $.each(answerChannels, function(key, value){
@@ -140,41 +126,32 @@ function battle_manager_audience(){
       ・よくないが、スケジューリングの過程で現在の問題がわかるので、そのタイミングでやってしまう。
   */
 
-  console.log('battle_manager_audience');
-
   // 1.フォーム削除
   prepare_battle_audience();
 
   // 2.経過時間計算
   var start_time = $('#question').data('start-time'); // 開始時間(QuestionRoomSetを作った時間だから、ちょっと前)を文字列で取得[ミリ秒]
   start_time += ADJUSTMENT; // 調整値を足して開始時間を遅らせる(上記の補正分)。これが大きすぎることがあり、その場合即終了してしまう
-  console.log(`start_time: ${start_time}`);
   var current_time = new Date();
   var elapsed_time = current_time.getTime() - start_time; //[ミリ秒]
-  console.log(`elapsed_time: ${elapsed_time}`);
 
   // 3.対戦スケジューリング(および4.観覧開始までの投稿を全表示)
   var cnt = 1;  // 何問目か
   var sum = 0;  // 対戦の各フェーズのdelayを足していく
   $.each(answerChannels, function(key, value){
-    console.log(`${cnt}問目スケジューリング`);
 
     var diff = 0; // sum-elapsed_time
     sum += SET_DELAY;
     diff = sum - elapsed_time;
     if(diff>=0){
-      console.log(`set_questionのdelay:${diff}`);
       set_question(qr_bodies[`qr${cnt}_body`], diff, cnt);
     }else{
       var nextDiff = ((sum-SET_DELAY)+FINISH_ANSWER_DELAY)-elapsed_time;
       if(nextDiff>=0){
-        console.log('set_queston即座実行');
         set_question_immediately(qr_bodies[`qr${cnt}_body`], cnt);
         current_ac_key=`qr${cnt}`;
         // 4.これまでの投稿を全表示
         let qr_ids_key = $('#question').data('current-qr-ids-answer-key');  // qr_ids_answerのキーを作成
-        console.log(`qr_ids_key: ${qr_ids_key}`);
-        console.log(qr_ids_answer[qr_ids_key]);
         // その時点までの回答を全取得(戻り値:部分テンプレート
 
         $.ajax({
@@ -196,12 +173,10 @@ function battle_manager_audience(){
     sum = (sum-SET_DELAY)+FINISH_ANSWER_DELAY;
     diff = sum - elapsed_time;
     if(diff>=0){
-      console.log(`finish_answeringのdelay:${diff}`);
       finish_answering(diff, cnt);
     }else{
       var nextDiff = sum+SET_DELAY-elapsed_time;
       if(nextDiff>=0){
-        console.log('finish_answering即座実行');
         finish_answering(0, cnt);
         current_ac_key=`qr${cnt+1}`;  // 最終問題の終了処理まで終わってた場合は問題数+1のキーが生まれるが、参照には使わないので大丈夫。
       }
@@ -214,7 +189,6 @@ function battle_manager_audience(){
   if(diff_finish_battle<0){
     diff_finish_battle=0;
   }
-  console.log(`finish_battleのdelay:${diff_finish_battle}(0なら即座実行)`);
   finish_battle(diff_finish_battle);
 
 }
@@ -238,15 +212,11 @@ function battle(cnt){
 
   var elapsed_time = FINISH_ANSWER_DELAY*(cnt-1) // 前の問題終了時点までに経過した時間
 
-  console.log("battle()")
   // お題を表示
-  console.log(`set_questionのdelay: ${SET_DELAY+elapsed_time}`);
   set_question(qr_bodies[`qr${cnt}_body`], SET_DELAY+elapsed_time, cnt)
   // 回答開始
-  console.log(`start_amsweringのdelay: ${START_ANSWER_DELAY+elapsed_time}`);
   start_answering(START_ANSWER_DELAY+elapsed_time)
   // 終了
-  console.log(`finish_answeringのdelay: ${FINISH_ANSWER_DELAY+elapsed_time}`);
   finish_answering(FINISH_ANSWER_DELAY+elapsed_time, cnt)
 }
 
@@ -256,12 +226,10 @@ function set_question(question_room_body, delay, cnt){
     1.現在のお題キー(qr_ids_answerにおける)を#questionのdata-current-qr-ids-answer-keyに保存
     2.お題をセット、表示
   */
-  console.log("set_question()")
 
   timeoutArray.push(setTimeout(function(){
     // 現在のお題のキー(qr_ids_answer)を設定
     var current_qr_ids_answer_key = $('#question').data('current-qr-ids-answer-key');
-    console.log(`current_qr_ids_answer_key: ${current_qr_ids_answer_key}`);
     // 今回が第一問目の場合、先頭のお題を登録
     // なお1ではなくcnt(第問題目か)を使ってるのは観覧用。参戦では1が来るはずだから問題ない。
     if(current_qr_ids_answer_key == "start"){
@@ -286,11 +254,9 @@ function set_question_immediately(question_room_body, cnt){
     1.現在のお題キー(qr_ids_answerにおける)を#questionのdata-current-qr-ids-answer-keyに保存
     2.お題をセット、表示
   */
-  console.log("set_question_immediately()")
 
   // 現在のお題のキー(qr_ids_answer)を設定
   var current_qr_ids_answer_key = $('#question').data('current-qr-ids-answer-key');
-  console.log(`current_qr_ids_answer_key: ${current_qr_ids_answer_key}`);
   // 今回が第一問目の場合、先頭のお題を登録
   // なお1ではなくcnt(第問題目か)を使ってるのは観覧用。参戦では1が来るはずだから問題ない。
   if(current_qr_ids_answer_key == "start"){
@@ -311,15 +277,12 @@ function set_question_immediately(question_room_body, cnt){
 
 // 回答準備
 function prepare_answering(){
-  console.log('prepare_answering()')
-
   // 送信ボタンを有効化
   enable_submit(true)
 }
 
 // 回答開始
 function start_answering(delay){
-  console.log('start_answering()')
 
   // 回答準備
   timeoutArray.push(setTimeout(function(){
@@ -330,7 +293,6 @@ function start_answering(delay){
 
 // 回答終了
 function finish_answering(delay, cnt){
-  console.log('finish_answering()')
 
   timeoutArray.push(setTimeout(function(){
     $('#question').text('終了！');
@@ -342,7 +304,6 @@ function finish_answering(delay, cnt){
 
 // 終了処理、次のお題の準備
 function prepare_for_next(cnt){
-  console.log('prepare_for_next()')
 
   // cnt...現在の出題数
 
@@ -374,11 +335,8 @@ function finish_battle(delay){
     ・労いページへ遷移
   */
 
-  console.log('finish_battle()')
-
   // ねぎらいページへ遷移
   timeoutArray.push(setTimeout(function(){
-    console.log('finish_battle');
     window.location.href = `<%= Rails.application.routes.url_helpers.finish_path %>?qr1_id=${qr_ids_answer.qr1_id}&qr2_id=${qr_ids_answer.qr2_id}&qr3_id=${qr_ids_answer.qr3_id}&is_audience=${is_audience}`
   }, delay));
 }
@@ -406,7 +364,6 @@ $(document).on('turbolinks:load', function(){
 // ページ遷移したらsetTimeoutを破棄する
 $(document).on('turbolinks:load', function(){
   $.each(timeoutArray, function(index, value){
-    console.log('timeoutをキャンセルしました');
     clearTimeout(value);
   });
 })

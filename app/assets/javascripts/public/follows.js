@@ -26,13 +26,11 @@ $(document).on('turbolinks:load', function(){
 
   // 終了ページで「トップへ」が押されたらフォローモーダルを表示する
   $('#finish__top-button').on('click', function(){
-    console.log("トップボタンが押された");
     $('.follow-modal').css('display', 'block');
   })
 
   // 対戦詳細ページで「トップへ」が押されたらフォローモーダルを表示する
   $('#result__top-button').on('click', function(){
-    console.log("トップボタンが押された");
     $('.follow-modal').css('display', 'block');
   })
 })

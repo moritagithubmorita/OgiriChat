@@ -5,7 +5,6 @@ let niceChannel = null
 $(document).on('turbolinks:load', function(){
   niceChannel = App.cable.subscriptions.create("NiceChannel", {
     connected: function() {
-      console.log('nice_connected!');
       // Called when the subscription is ready for use on the server
     },
 
@@ -17,12 +16,10 @@ $(document).on('turbolinks:load', function(){
     received: function(data) {
       // 押されたナイス要素横のカウンタ要素を取得し、値を更新する
 
-      console.log("received!");
       $(`[data-answer-id-total=${data['answer_id']}]`).text(data['total_nice_count'])
     },
 
     nice: function(answer_id, is_plus, question_room_id){
-      console.log("nice")
 
       return this.perform('nice', {
             answer_id: answer_id,
@@ -37,11 +34,9 @@ $(document).on('turbolinks:load', function(){
 // niceマークが押されたらブラウザに知らせる
 // その際に画像を変える
 $(document).on('click', '.answer__nice', function(){
-  console.log("niceが押されました");
 
   //画像を変える
   $(this).toggleClass('answer__nice--active');
-  console.log($(this).hasClass('answer__nice--active'));
 
   //サーバに知らせる
   let answer_id = $(this).data('answer-id');

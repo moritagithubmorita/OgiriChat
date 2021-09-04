@@ -9,9 +9,6 @@ class Public::HomesController < ApplicationController
       end
     end
 
-    # binding.pry
-
-
   end
 
   # ランクアップ処理
@@ -30,33 +27,6 @@ class Public::HomesController < ApplicationController
         current_user.update(star_count: current_user.star_count+1, rankup_nice_count: 0)
       end
     end
-  end
-
-  private
-
-  # 全てのテーブルを初期状態に戻す
-  # 開始時に存在しないデータは全削除
-  # 初期値のあるものを初期化
-  def reset_all_tables
-    User.all.each do |user|
-      user.update(total_nice_count: 0, total_answer_count: 0, rankup_nice_count: 0, star_count: 0, rank: :fledgling)
-    end
-    Answer.destroy_all
-    QuestionRoom.all.each do |qr|
-      qr.update(total_nice_count: 0, total_answer_count: 0, is_active: true, is_set: false, room_status: :standby)
-    end
-    Panelist.destroy_all
-    Notice.destroy_all
-    Inquiry.destroy_all
-    Follow.destroy_all
-    Follower.destroy_all
-    QuestionRoomSet.destroy_all
-    p "Panelist:#{Panelist.count}"
-    p "Notice:#{Notice.count}"
-    p "Inquiry:#{Inquiry.count}"
-    p "Follow:#{Follow.count}"
-    p "Follower:#{Follower.count}"
-    p "QuestionRoomSet:#{QuestionRoomSet.count}"
   end
 
 end

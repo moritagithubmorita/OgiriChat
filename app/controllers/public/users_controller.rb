@@ -44,7 +44,7 @@ class Public::UsersController < ApplicationController
   # 退会処理
   def withdraw
     current_user.update(is_active: false)
-    reset_session
+    sign_out current_user
     redirect_to root_path
   end
 

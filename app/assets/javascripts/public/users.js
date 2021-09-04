@@ -7,10 +7,8 @@
 // ユーザマイページでフォローのチェックが押されたらフォローとフォロワーを削除/作成
 $(document).on('turbolinks:load', function(){
   $('.follow__check-box').on('click', function(){
-    console.log('チェックボックス押されたぜ？')
     // public/followsコントローラにログインユーザidと対象者のidを送る
     // トグル処理はコントローラに一任する
-    console.log($(this).data('the-other-id'))
     $.ajax({
       url: 'follows/toggle',
       type: 'GET',
